@@ -288,6 +288,8 @@
 
 		<echo>L2jFrozen Gameserver Revision: ${l2jfrozen.revision}</echo>
 	</target>
+	
+	<copy file="./build/dist/gameserver/lib/l2jfrozen-core.jar" todir="C:/Server/gameserver/lib"/>
 
 	<target name="dist-local" depends="prepare-local,prepare-final,export" description="Create distribution files and Zip one into 'build' folder">
 		<zip destfile="${build}/L2JFrozen_GameServer.zip" basedir="${build.dist}" update="true" />
