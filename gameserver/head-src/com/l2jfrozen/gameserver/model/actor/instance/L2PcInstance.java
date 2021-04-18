@@ -21,7 +21,7 @@
 package com.l2jfrozen.gameserver.model.actor.instance;
 
 import static com.l2jfrozen.gameserver.ai.CtrlIntention.AI_INTENTION_MOVE_TO;
-
+import java.util.Map.Entry;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -254,7 +254,7 @@ import com.l2jfrozen.util.random.Rnd;
 public final class L2PcInstance extends L2PlayableInstance
 {
 	/** The Constant RESTORE_SKILLS_FOR_CHAR. */
-	private static final String RESTORE_SKILLS_FOR_CHAR = "SELECT skill_id,skill_level FROM character_skills WHERE char_obj_id=? AND class_index=?";
+	private static final String RESTORE_SKILLS_FOR_CHAR = "SELECT skill_id,skill_level,class_index FROM character_skills WHERE char_obj_id=? AND class_index=?";
 	
 	/** The Constant ADD_NEW_SKILL. */
 	private static final String ADD_NEW_SKILL = "INSERT INTO character_skills (char_obj_id,skill_id,skill_level,skill_name,class_index) VALUES (?,?,?,?,?)";
@@ -484,7 +484,7 @@ public final class L2PcInstance extends L2PlayableInstance
 	private static final String STATUS_DATA_GET = "SELECT hero, noble, donator, hero_end_date FROM characters_custom_data WHERE obj_Id = ?";
 	
 	/** The Constant RESTORE_SKILLS_FOR_CHAR_ALT_SUBCLASS. */
-	private static final String RESTORE_SKILLS_FOR_CHAR_ALT_SUBCLASS = "SELECT skill_id,skill_level FROM character_skills WHERE char_obj_id=? ORDER BY (skill_level+0)";
+	private static final String RESTORE_SKILLS_FOR_CHAR_ALT_SUBCLASS = "SELECT skill_id,skill_level,class_index FROM character_skills WHERE char_obj_id=? ORDER BY (skill_level+0)";
 	
 	// ---------------------- L2JFrozen Addons ---------------------------------- //
 	/** The Constant RESTORE_CHAR_SUBCLASSES. */
@@ -11122,40 +11122,61 @@ public final class L2PcInstance extends L2PlayableInstance
 	 */
 	public synchronized void restoreSkills()
 	{
+		Map<Integer, Integer> skills = new HashMap<>();
 		Connection con = null;
 		
 		try
 		{
-			if (!Config.KEEP_SUBCLASS_SKILLS)
+			if (!Config.STACK_SUBCLASS_SKILLS)
 			{
 				// Retrieve all skills of this L2PcInstance from the database
 				con = L2DatabaseFactory.getInstance().getConnection(false);
 				PreparedStatement statement = con.prepareStatement(RESTORE_SKILLS_FOR_CHAR);
 				statement.setInt(1, getObjectId());
 				statement.setInt(2, getClassIndex());
-				ResultSet rset = statement.executeQuery();
-				
-				// Go though the recordset of this SQL query
-				while (rset.next())
+				try (ResultSet rset = statement.executeQuery())
 				{
-					final int id = rset.getInt("skill_id");
-					final int level = rset.getInt("skill_level");
 					
-					if (id > 9000)
+					// Go though the recordset of this SQL query
+					while (rset.next())
 					{
-						continue; // fake skills for base stats
+						final int id = rset.getInt("skill_id");
+						final int level = rset.getInt("skill_level");
+						final int classIndex = rset.getInt("class_index");
+						
+						if (id > 9000)
+							continue; // fake skills for base stats
+						
+						// Create a L2Skill object for each record
+						final L2Skill skill = SkillTable.getInstance().getInfo(id, level);
+						
+						if (skill == null)
+						{
+							LOGGER.warn("Skipped null skill Id: " + id + ", Level: " + level + " while restoring player skills for " + getName());
+							continue;
+						}
+						if (this.getClassIndex() != classIndex)
+						{
+							if (Config.STACK_ACTIVE_SKILLS && skill.isActive())
+								continue;
+							if (Config.STACK_PASIVE_SKILLS && skill.isPassive())
+								continue;
+							if (Config.DONT_STACK_SKILLS)
+							{
+								if (Config.DONT_STACK_SKILLS_LIST_ID.contains(id))
+									continue;
+							}
+						}
+						// We save all the skills that we will teach our character.
+						// This will avoid teaching a skill from lvl 1 to 15 for example
+						// And directly we teach the lvl 15 =)
+						skills.put(id, level);
 					}
+
 					
-					// Create a L2Skill object for each record
-					final L2Skill skill = SkillTable.getInstance().getInfo(id, level);
-					
-					// Add the L2Skill object to the L2Character _skills and its Func objects to the calculator set of the L2Character
-					super.addSkill(skill);
 				}
 				
-				DatabaseUtils.close(rset);
 				DatabaseUtils.close(statement);
-				rset = null;
 				statement = null;
 			}
 			else
@@ -11203,6 +11224,30 @@ public final class L2PcInstance extends L2PlayableInstance
 			CloseUtil.close(con);
 			con = null;
 		}
+		
+		
+		for (Entry<Integer, Integer> skillLearn : skills.entrySet())
+		{
+			final int id = skillLearn.getKey();
+			final int level = skillLearn.getValue();
+			// Create a L2Skill object for each record
+			final L2Skill skill = SkillTable.getInstance().getInfo(id, level);
+			
+			if (skill == null)
+			{
+				LOGGER.warn("Skipped null skill Id: " + id + ", Level: " + level + " while restoring player skills for " + getName());
+				continue;
+			}
+			
+			// solo le enseniamos el skill si es que el mismo no lo tiene aun o si es el inferior al q le vamos a enseniar
+			if (getSkillLevel(id) < level)
+			{
+				// Add the L2Skill object to the L2Character _skills and its Func objects to the calculator set of the L2Character
+				super.addSkill(skill);
+			}
+		}
+
+		
 	}
 	
 	public void restoreEffects()

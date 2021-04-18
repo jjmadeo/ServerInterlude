@@ -246,32 +246,41 @@ public enum PlayerClass
 	{
 		Set<PlayerClass> subclasses = null;
 		
-		if (_level == Third)
-		{
-			subclasses = EnumSet.copyOf(mainSubclassSet);
-			
-			subclasses.removeAll(neverSubclassed);
-			subclasses.remove(this);
-			
-			switch (player.getRace())
-			{
-				case elf:
-					subclasses.removeAll(getSet(DarkElf, Third));
-					break;
-				case darkelf:
-					subclasses.removeAll(getSet(LightElf, Third));
-					break;
-			}
-			
-			Set<PlayerClass> unavailableClasses = subclassSetMap.get(this);
-			
-			if (unavailableClasses != null)
-			{
-				subclasses.removeAll(unavailableClasses);
-			}
-			
-			unavailableClasses = null;
-		}
+		
+		
+		
+		 
+	        subclasses = EnumSet.copyOf(mainSubclassSet); 
+	         subclasses.addAll(neverSubclassed); 
+	        subclasses.remove(this); 
+	       
+//		 if(_level == Third) 	
+//		
+//		{
+//			subclasses = EnumSet.copyOf(mainSubclassSet);
+//			
+//			subclasses.removeAll(neverSubclassed);
+//			subclasses.remove(this);
+//			
+//			switch (player.getRace())
+//			{
+//				case elf:
+//					subclasses.removeAll(getSet(DarkElf, Third));
+//					break;
+//				case darkelf:
+//					subclasses.removeAll(getSet(LightElf, Third));
+//					break;
+//			}
+//			
+//			Set<PlayerClass> unavailableClasses = subclassSetMap.get(this);
+//			
+//			if (unavailableClasses != null)
+//			{
+//				subclasses.removeAll(unavailableClasses);
+//			}
+//			
+//			unavailableClasses = null;
+//		}
 		
 		return subclasses;
 	}

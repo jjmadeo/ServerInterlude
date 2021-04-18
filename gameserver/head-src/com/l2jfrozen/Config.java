@@ -39,7 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
-
+import java.util.HashSet;
+import java.util.Set;
 import javolution.text.TypeFormat;
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -2365,7 +2366,12 @@ public final class Config
 	public static boolean OATH_ARMORS;
 	public static boolean CASTLE_CROWN;
 	public static boolean CASTLE_CIRCLETS;
-	public static boolean KEEP_SUBCLASS_SKILLS;
+	public static boolean STACK_SUBCLASS_SKILLS;
+	public static boolean STACK_ACTIVE_SKILLS;
+	public static boolean STACK_PASIVE_SKILLS;
+	public static boolean DONT_STACK_SKILLS;
+	public static Set<Integer> DONT_STACK_SKILLS_LIST_ID = new HashSet<>();
+
 	public static boolean CHAR_TITLE;
 	public static String ADD_CHAR_TITLE;
 	public static boolean NOBLE_CUSTOM_ITEMS;
@@ -2481,7 +2487,16 @@ public final class Config
 			ALLOW_DETAILED_STATS_VIEW = Boolean.valueOf(L2JFrozenSettings.getProperty("AllowDetailedStatsView", "False"));
 			ALLOW_ONLINE_VIEW = Boolean.valueOf(L2JFrozenSettings.getProperty("AllowOnlineView", "False"));
 			
-			KEEP_SUBCLASS_SKILLS = Boolean.parseBoolean(L2JFrozenSettings.getProperty("KeepSubClassSkills", "False"));
+			STACK_SUBCLASS_SKILLS = Boolean.parseBoolean(L2JFrozenSettings.getProperty("StackSubClassSkill", "False"));
+			STACK_ACTIVE_SKILLS = Boolean.parseBoolean(L2JFrozenSettings.getProperty("NoStackActiveSkill", "True"));
+			STACK_PASIVE_SKILLS = Boolean.parseBoolean(L2JFrozenSettings.getProperty("NoStackPasiveSkill", "True"));
+			DONT_STACK_SKILLS = Boolean.parseBoolean(L2JFrozenSettings.getProperty("DontStackSkills", "True"));
+			String aux = L2JFrozenSettings.getProperty("DontStackSkillsListID").trim();
+			for (String subAcuInfo : aux.split(","))
+			{
+				DONT_STACK_SKILLS_LIST_ID.add(Integer.valueOf(subAcuInfo));
+			}
+
 			
 			ALLOWED_SKILLS = L2JFrozenSettings.getProperty("AllowedSkills", "541,542,543,544,545,546,547,548,549,550,551,552,553,554,555,556,557,558,617,618,619");
 			ALLOWED_SKILLS_LIST = new FastList<>();
