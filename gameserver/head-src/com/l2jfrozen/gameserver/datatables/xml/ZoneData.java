@@ -56,6 +56,7 @@ import com.l2jfrozen.gameserver.model.zone.type.L2DamageZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2DerbyTrackZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2EffectZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2FishingZone;
+import com.l2jfrozen.gameserver.model.zone.type.L2FlagZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2FortZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2JailZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2MotherTreeZone;
@@ -267,6 +268,9 @@ public class ZoneData
 										break;
 									case "SwampZone":
 										temp = new L2SwampZone(zoneId);
+										break;
+									case "FlagZone":
+										temp = new L2FlagZone(zoneId);
 										break;
 								}
 								

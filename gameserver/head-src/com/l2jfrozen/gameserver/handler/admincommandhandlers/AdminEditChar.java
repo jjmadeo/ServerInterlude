@@ -90,7 +90,8 @@ public class AdminEditChar implements IAdminCommandHandler
 		"admin_setchar_cp",
 		"admin_setchar_hp",
 		"admin_setchar_mp",
-		"admin_sethero"
+		"admin_sethero",
+		"admin_skillreload"
 	};
 	
 	private enum CommandEnum
@@ -122,7 +123,8 @@ public class AdminEditChar implements IAdminCommandHandler
 		admin_setchar_cp,
 		admin_setchar_hp,
 		admin_setchar_mp,
-		admin_sethero
+		admin_sethero,
+		admin_skillreload
 	}
 	
 	@Override
@@ -1064,6 +1066,25 @@ public class AdminEditChar implements IAdminCommandHandler
 					activeChar.sendMessage("Example: //sethero <trigger> <save>");
 				}
 			}
+			
+			case admin_skillreload:
+				{
+					final L2Object target = activeChar.getTarget();
+					L2PcInstance player = null;
+					if (target instanceof L2PcInstance) {
+						player = (L2PcInstance) target;
+						
+						for (final L2Skill skill : player.getAllSkills())
+							if (skill.getId() != 1324)
+								player.enableSkill(skill);
+						
+						player.updateEffectIcons();
+					}
+						
+				}
+				 		
+			
+			
 		}
 		
 		return false;

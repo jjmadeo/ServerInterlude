@@ -42,6 +42,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.Map.Entry;
 
 import javolution.text.TextBuilder;
 import javolution.util.FastList;
@@ -567,7 +568,7 @@ public final class L2PcInstance extends L2PlayableInstance
 		55,
 		62
 	};
-	
+	private Location CordenadaPostTVT;
 	// private static Logger LOGGER = Logger.getLogger(L2PcInstance.class);
 	
 	/**
@@ -7853,8 +7854,9 @@ public final class L2PcInstance extends L2PlayableInstance
 			return;
 		
 		// If in Arena, do nothing
-		if (isInsideZone(ZONE_PVP) || targetPlayer.isInsideZone(ZONE_PVP))
-			return;
+//		if (isInsideZone(ZONE_PVP) || targetPlayer.isInsideZone(ZONE_PVP))
+//			return;
+		
 		
 		// check anti-farm
 		if (!checkAntiFarm(targetPlayer))
@@ -19688,5 +19690,42 @@ public final class L2PcInstance extends L2PlayableInstance
 		
 		_currentPetSkill = new SkillDat(currentSkill, ctrlPressed, shiftPressed);
 	}
+	
+	public Location  RespownGiran() {
+		int  spawnGiranRandom = Rnd.nextInt(3);
+		Location loc = null;
+		switch (spawnGiranRandom)
+		{
+			case 0:
+				loc = new Location(81335,147888,-3495);
+				break;
+			case 1:
+				loc = new Location(81335,148620,-3495);
+				
+				break;							
+			
+			default:
+				loc = new Location(81335,149307,-3495);
+				break;
+		}
+		return loc;
+	}
+
+	/**
+	 * @return the cordenadaPostTVT
+	 */
+	public Location getCordenadaPostTVT()
+	{
+		return CordenadaPostTVT;
+	}
+
+	/**
+	 * @param cordenadaPostTVT the cordenadaPostTVT to set
+	 */
+	public void setCordenadaPostTVT(Location cordenadaPostTVT)
+	{
+		CordenadaPostTVT = cordenadaPostTVT;
+	}
+
 	
 }

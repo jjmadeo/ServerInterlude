@@ -261,7 +261,8 @@ public class ScrollOfEscape implements IItemHandler
 					if (CastleManager.getInstance().getCastleByOwner(_activeChar.getClan()) != null)
 						_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Castle);
 					else
-						_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+						//_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+						_activeChar.teleToLocation(_activeChar.RespownGiran(),true);
 				}
 				// escape to fortress if own's one if own's one
 				else if ((_itemId == 1830 || _itemId == 5859))
@@ -269,7 +270,8 @@ public class ScrollOfEscape implements IItemHandler
 					if (FortManager.getInstance().getFortByOwner(_activeChar.getClan()) != null)
 						_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Fortress);
 					else
-						_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+						_activeChar.teleToLocation(_activeChar.RespownGiran(),true);
+						//_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 				}
 				else if ((_itemId == 1829 || _itemId == 5858) && _activeChar.getClan() != null && ClanHallManager.getInstance().getClanHallByOwner(_activeChar.getClan()) != null) // escape to clan hall if own's one
 				{
@@ -289,7 +291,8 @@ public class ScrollOfEscape implements IItemHandler
 				{
 					if (_itemId < 7117)
 					{
-						_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+						_activeChar.teleToLocation(_activeChar.RespownGiran(),true);
+						//_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 					}
 					else
 					{
@@ -377,7 +380,11 @@ public class ScrollOfEscape implements IItemHandler
 								_activeChar.teleToLocation(108275, -53785, -2524, true); // Varka Silenos Village
 								break;
 							default:
-								_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+								//custom spawn in giran
+								_activeChar.teleToLocation(_activeChar.RespownGiran(),true);
+								//retail
+								//_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+
 								break;
 						}
 					}

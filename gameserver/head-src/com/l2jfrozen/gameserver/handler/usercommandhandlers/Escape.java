@@ -192,7 +192,12 @@ public class Escape implements IUserCommandHandler
 					return;
 				}
 				
-				_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+				//Random en Giran Spanw
+				_activeChar.teleToLocation(_activeChar.RespownGiran(),true);
+				
+				
+				//Retail
+				//_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 			}
 			catch (final Throwable e)
 			{

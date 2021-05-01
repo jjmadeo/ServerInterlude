@@ -40,6 +40,7 @@ import com.l2jfrozen.gameserver.network.serverpackets.Revive;
 import com.l2jfrozen.gameserver.thread.ThreadPoolManager;
 import com.l2jfrozen.gameserver.util.IllegalPlayerAction;
 import com.l2jfrozen.gameserver.util.Util;
+import com.l2jfrozen.util.random.Rnd;
 
 /**
  * @author programmos
@@ -207,9 +208,45 @@ public final class RequestRestartPoint extends L2GameClientPacket
 							loc = new Location(17836, 170178, -3507);// Floran Village
 							break;
 						}
-						loc = MapRegionTable.getInstance().getTeleToLocation(activeChar, MapRegionTable.TeleportWhereType.Town);
+						
+						
+						//respown custom en zona pvp.
+						if(activeChar.getInZonaPVP()){
+							int  spawnrandom = Rnd.nextInt(6);
+							
+							switch (spawnrandom)
+							{
+								case 0:
+									loc = new Location(185504, 22293, -3340);
+									break;
+								case 1:
+									loc = new Location(184444, 20314, -3200);					
+									break;
+								case 2:
+									loc = new Location(185728, 18056, -3340);
+									break;
+								case 3:
+									loc = new Location(187239, 25552, -3752);					
+									break;
+								case 4:
+									loc = new Location(186749, 16349, -3493);
+									break;
+								
+								default:
+									loc = new Location(185910, 20282 ,-3373);
+									break;
+							}
+						}else {
+							
+							loc = activeChar.RespownGiran();						
+							
+							//Spawn normal lo mas cerca a cada ciudad.
+							//loc = MapRegionTable.getInstance().getTeleToLocation(activeChar, MapRegionTable.TeleportWhereType.Town);
+
+						}
 						break;
 				}
+				
 				
 				// Stand up and teleport, proof dvp video.
 				activeChar.setIsIn7sDungeon(false);
