@@ -113,7 +113,7 @@ public final class RequestPackageSend extends L2GameClientPacket
 		
 		final L2FolkInstance manager = player.getLastFolkNPC();
 		
-		if ((manager == null || !player.isInsideRadius(manager, L2NpcInstance.INTERACTION_DISTANCE, false, false)) && !player.isGM())
+		if ((manager == null || !player.isInsideRadius(manager, L2NpcInstance.INTERACTION_DISTANCE, false, false))&& !player.isGM())
 			return;
 		
 		if (warehouse instanceof PcFreight && !player.getAccessLevel().allowTransaction())

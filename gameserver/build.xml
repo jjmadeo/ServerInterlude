@@ -291,6 +291,11 @@
 
 	<target name="dist-local" depends="prepare-local,prepare-final,export" description="Create distribution files and Zip one into 'build' folder">
 		<zip destfile="${build}/L2JFrozen_GameServer.zip" basedir="${build.dist}" update="true" />
+		<echo>Comenzando a Copiar A la carpeta GameS </echo>
+		<copy file=".\build\dist\gameserver\lib\l2jfrozen-core.jar" todir="C:\Server\gameserver\lib"/>
+		<echo>Copiando LoginS</echo>
+		<copy file=".\build\dist\loginserver\lib\l2jfrozen-core.jar" todir="C:\Server\loginserver\lib"/>
+		<echo>Se ah copiado correctamente</echo>
 	</target>
 
 	<target name="dist-test" depends="prepare-test,prepare-final,export" description="Create distribution files into 'local_test_folder' folder: change it into build.properties">

@@ -304,6 +304,9 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	/** The _meditated. */
 	private boolean _meditated;
 	
+	private boolean _InZonaPVP = false;
+
+	
 	/**
 	 * Zone system<br>
 	 * x^2 or x*x.
@@ -534,8 +537,10 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 		
 		final ObjectPosition pos = getPosition();
 		
-		if (pos != null)
+		if (pos != null) {
+			
 			spawnMe(getPosition().getX(), getPosition().getY(), getPosition().getZ());
+		}
 		
 		setIsTeleporting(false);
 		
@@ -2358,9 +2363,11 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 		// Start broadcast status
 		broadcastPacket(new Revive(this));
 		
+		
 		if (getWorldRegion() != null)
-		{
-			getWorldRegion().onRevive(this);
+		{		
+				getWorldRegion().onRevive(this);
+			
 		}
 		else
 		{
@@ -10992,5 +10999,21 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 		{
 			((L2Summon) this).getOwner().rechargeAutoSoulShot(!isMagic, isMagic, true);
 		}
+	}
+
+	/**
+	 * @return the _InZonaPVP
+	 */
+	public boolean getInZonaPVP()
+	{
+		return _InZonaPVP;
+	}
+
+	/**
+	 * @param _InZonaPVP the _InZonaPVP to set
+	 */
+	public void setInZonaPVP(boolean _InZonaPVP)
+	{
+		this._InZonaPVP = _InZonaPVP;
 	}
 }

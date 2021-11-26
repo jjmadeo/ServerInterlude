@@ -43,7 +43,9 @@ import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PetInstance;
 import com.l2jfrozen.gameserver.model.actor.instance.L2SiegeSummonInstance;
 import com.l2jfrozen.gameserver.network.SystemMessageId;
+import com.l2jfrozen.gameserver.network.serverpackets.CharMoveToLocation;
 import com.l2jfrozen.gameserver.network.serverpackets.SystemMessage;
+import com.l2jfrozen.gameserver.network.serverpackets.ValidateLocation;
 import com.l2jfrozen.gameserver.skills.Formulas;
 import com.l2jfrozen.gameserver.skills.Stats;
 import com.l2jfrozen.util.random.Rnd;
@@ -75,7 +77,13 @@ public class Disablers implements ISkillHandler
 		L2Skill.SkillType.ERASE,
 		L2Skill.SkillType.MAGE_BANE,
 		L2Skill.SkillType.WARRIOR_BANE,
-		L2Skill.SkillType.BETRAY
+		L2Skill.SkillType.BETRAY,
+		L2Skill.SkillType.GET_PLAYERPVP,
+		L2Skill.SkillType.RUSH
+
+
+
+		
 	};
 	
 	protected static final Logger LOGGER = Logger.getLogger(L2Skill.class);
@@ -124,6 +132,62 @@ public class Disablers implements ISkillHandler
 					}
 					break;
 				}
+				case GET_PLAYERPVP:
+				{
+					if (target.reflectSkill(skill))
+						target = activeChar;
+					
+					if (Formulas.getInstance().calcSkillSuccess(activeChar, target, skill, ss, sps, bss)) {
+						//skill.getEffects(activeChar, target, ss, sps, bss);
+						target.setXYZ(activeChar.getX() + Rnd.get(-10, 10), activeChar.getY() + Rnd.get(-10, 10), activeChar.getZ());
+						target.sendPacket(new ValidateLocation(target));
+						//((L2PcInstance)target).broadcastUserInfo();
+
+					}
+						
+					else
+					{
+						if (activeChar instanceof L2PcInstance)
+						{
+							SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
+							sm.addString(target.getName());
+							sm.addSkillName(skill.getDisplayId());
+							activeChar.sendPacket(sm);
+							sm = null;
+						}
+					}
+					break;
+				}
+				case RUSH:
+				{
+					//L2PcInstance trg = (L2PcInstance) activeChar;
+					
+					//trg.getAppearance().setInvisible();
+					if (Formulas.getInstance().calcSkillSuccess(activeChar, target, skill, ss, sps, bss)) {
+						skill.getEffects(activeChar, target, ss, sps, bss);
+						activeChar.setXYZ(target.getX() + Rnd.get(-10, 10), target.getY() + Rnd.get(-10, 10), target.getZ());
+						activeChar.sendPacket(new ValidateLocation(activeChar));
+						target.sendPacket(new ValidateLocation(target));
+						activeChar.broadcastPacket(new CharMoveToLocation(activeChar), 1000);
+
+					
+						//((L2PcInstance)activeChar).broadcastUserInfo();
+						
+					}
+						
+					else
+					{
+						if (activeChar instanceof L2PcInstance)
+						{
+							SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
+							sm.addString(target.getName());
+							sm.addSkillName(skill.getDisplayId());
+							activeChar.sendPacket(sm);
+							sm = null;
+						}
+					}
+					break;
+				}
 				case FAKE_DEATH:
 				{
 					// stun/fakedeath is not mdef dependant, it depends on lvl difference, target CON and power of stun
@@ -147,8 +211,11 @@ public class Disablers implements ISkillHandler
 					if (target.reflectSkill(skill))
 						target = activeChar;
 					
-					if (Formulas.getInstance().calcSkillSuccess(activeChar, target, skill, ss, sps, bss))
+					if (Formulas.getInstance().calcSkillSuccess(activeChar, target, skill, ss, sps, bss)) {
 						skill.getEffects(activeChar, target, ss, sps, bss);
+						
+					}
+						
 					else
 					{
 						if (activeChar instanceof L2PcInstance)

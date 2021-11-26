@@ -683,6 +683,9 @@ public class EnterWorld extends L2GameClientPacket
 		if (activeChar.isAio())
 			onEnterAio(activeChar);
 		
+		if(activeChar.isDonator())
+			onEnterDonator(activeChar);
+		
 		activeChar.updateNameTitleColor();
 		
 		sendPacket(new UserInfo(activeChar));
@@ -718,6 +721,33 @@ public class EnterWorld extends L2GameClientPacket
 			{
 				final long hour = (endDay - now) / 3600000;
 				activeChar.sendMessage("[Aio System]: Left " + (int) hour + " hours to Aio period ends.");
+			}
+		}
+	}
+	
+	private void onEnterDonator(final L2PcInstance activeChar)
+	{
+		final long now = Calendar.getInstance().getTimeInMillis();
+		final long endDay = activeChar.getDonator_end_date();
+		
+		if (now > endDay)
+		{
+			activeChar.setDonator(false);
+			activeChar.setDonator_end_date(0);
+			activeChar.sendMessage("[VIP]: El periodo ah finalizo.");
+		}
+		else
+		{
+			final Date dt = new Date(endDay);
+			_daysleft = (endDay - now) / 86400000;
+			if (_daysleft > 30)
+				activeChar.sendMessage("[VIP System]: VIP period ends in " + df.format(dt) + ". enjoy the Game.");
+			else if (_daysleft > 0)
+				activeChar.sendMessage("[VIP System]: Left " + (int) _daysleft + " for VIP period ends.");
+			else if (_daysleft < 1)
+			{
+				final long hour = (endDay - now) / 3600000;
+				activeChar.sendMessage("[VIP System]: Left " + (int) hour + " hours to VIP period ends.");
 			}
 		}
 	}

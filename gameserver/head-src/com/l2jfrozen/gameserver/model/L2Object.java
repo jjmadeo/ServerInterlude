@@ -690,4 +690,39 @@ public abstract class L2Object
 	{
 		return false;
 	}
+	public void setInvisible(boolean invis) {
+		if (invis) {
+			((L2PcInstance) this).getAppearance().setInvisible();
+			final com.l2jfrozen.gameserver.network.serverpackets.DeleteObject deletePacket = new com.l2jfrozen.gameserver.network.serverpackets.DeleteObject(this);
+			for (L2Object obj : getKnownList().getKnownObjects().values()) {
+				if ((obj != null) && obj.isPlayer()) {					
+						((L2PcInstance) obj).sendPacket(deletePacket);
+					
+				}
+			}
+		}else {
+			((L2PcInstance) this).getAppearance().setVisible();
+			final com.l2jfrozen.gameserver.network.serverpackets.DeleteObject deletePacket = new com.l2jfrozen.gameserver.network.serverpackets.DeleteObject(this);
+			for (L2Object obj : getKnownList().getKnownObjects().values()) {
+				if ((obj != null) && obj.isPlayer()) {
+					//final L2PcInstance player = obj.getActingPlayer();
+					
+						((L2PcInstance) obj).sendPacket(deletePacket);
+					
+				}
+			}
+		}
+		
+		
+	}
+	public void render() {
+		final com.l2jfrozen.gameserver.network.serverpackets.DeleteObject deletePacket = new com.l2jfrozen.gameserver.network.serverpackets.DeleteObject(this);
+		for (L2Object obj : getKnownList().getKnownObjects().values()) {
+			if ((obj != null) && obj.isPlayer()) {					
+					((L2PcInstance) obj).sendPacket(deletePacket);
+				
+			}
+		}
+	}
+	
 }

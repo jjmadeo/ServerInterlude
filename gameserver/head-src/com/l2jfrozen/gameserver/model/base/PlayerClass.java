@@ -194,7 +194,7 @@ public enum PlayerClass
 	private ClassType _type;
 	
 	private static final Set<PlayerClass> mainSubclassSet;
-	private static final Set<PlayerClass> neverSubclassed = EnumSet.of(Overlord, Warsmith);
+	//private static final Set<PlayerClass> neverSubclassed = EnumSet.of(Overlord, Warsmith);
 	
 	private static final Set<PlayerClass> subclasseSet1 = EnumSet.of(DarkAvenger, Paladin, TempleKnight, ShillienKnight);
 	private static final Set<PlayerClass> subclasseSet2 = EnumSet.of(TreasureHunter, AbyssWalker, Plainswalker);
@@ -207,7 +207,7 @@ public enum PlayerClass
 	static
 	{
 		Set<PlayerClass> subclasses = getSet(null, Third);
-		subclasses.removeAll(neverSubclassed);
+		//subclasses.removeAll(neverSubclassed);
 		
 		mainSubclassSet = subclasses;
 		
@@ -250,7 +250,7 @@ public enum PlayerClass
 		{
 			subclasses = EnumSet.copyOf(mainSubclassSet);
 			
-			subclasses.removeAll(neverSubclassed);
+			//subclasses.removeAll(neverSubclassed);
 			subclasses.remove(this);
 			
 			switch (player.getRace())
@@ -269,7 +269,7 @@ public enum PlayerClass
 			{
 				subclasses.removeAll(unavailableClasses);
 			}
-			
+//			
 			unavailableClasses = null;
 		}
 		

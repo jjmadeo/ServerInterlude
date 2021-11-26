@@ -22,6 +22,7 @@ package com.l2jfrozen.gameserver.handler.admincommandhandlers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
@@ -29,10 +30,13 @@ import com.l2jfrozen.Config;
 import com.l2jfrozen.gameserver.datatables.GmListTable;
 import com.l2jfrozen.gameserver.handler.IAdminCommandHandler;
 import com.l2jfrozen.gameserver.model.L2Object;
+import com.l2jfrozen.gameserver.model.L2World;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jfrozen.gameserver.model.entity.Announcements;
+import com.l2jfrozen.gameserver.network.serverpackets.EtcStatusUpdate;
 import com.l2jfrozen.gameserver.network.serverpackets.SocialAction;
 import com.l2jfrozen.util.CloseUtil;
+import com.l2jfrozen.util.database.DatabaseUtils;
 import com.l2jfrozen.util.database.L2DatabaseFactory;
 
 public class AdminDonator implements IAdminCommandHandler
@@ -57,42 +61,123 @@ public class AdminDonator implements IAdminCommandHandler
 		
 		if (command.startsWith("admin_setdonator"))
 		{
-			L2Object target = activeChar.getTarget();
 			
-			if (target instanceof L2PcInstance)
-			{
-				L2PcInstance targetPlayer = (L2PcInstance) target;
-				final boolean newDonator = !targetPlayer.isDonator();
+			final StringTokenizer st = new StringTokenizer(command);
+	
+	
+				boolean no_token = false;
 				
-				if (newDonator)
-				{
-					targetPlayer.setDonator(true);
-					targetPlayer.updateNameTitleColor();
-					updateDatabase(targetPlayer, true);
-					sendMessages(true, targetPlayer, activeChar, false, true);
-					targetPlayer.broadcastPacket(new SocialAction(targetPlayer.getObjectId(), 16));
-					targetPlayer.broadcastUserInfo();
+				if (st.hasMoreTokens())
+				{ // char_name not specified
+				
+					final String char_name = st.nextToken();
+					
+					final L2PcInstance player = L2World.getInstance().getPlayer(char_name);
+					
+					if (player != null)
+					{
+						
+						if (st.hasMoreTokens()) // time
+						{
+							final String time = st.nextToken();
+							
+							try
+							{
+								final int value = Integer.parseInt(time);
+								
+								if (value > 0)
+								{
+									
+									doDonator(activeChar, player, char_name, time);
+									
+									if (player.isAio())
+										return true;
+									
+								}
+								else
+								{
+									activeChar.sendMessage("Time must be bigger then 0!");
+									return false;
+								}
+								
+							}
+							catch (final NumberFormatException e)
+							{
+								activeChar.sendMessage("Time must be a number!");
+								return false;
+							}
+							
+						}
+						else
+						{
+							no_token = true;
+						}
+						
+					}
+					else
+					{
+						activeChar.sendMessage("Player must be online to set AIO status");
+						no_token = true;
+					}
+					
 				}
 				else
 				{
-					targetPlayer.setDonator(false);
-					targetPlayer.updateNameTitleColor();
-					updateDatabase(targetPlayer, false);
-					sendMessages(false, targetPlayer, activeChar, false, true);
-					targetPlayer.broadcastUserInfo();
+					
+					no_token = true;
+					
 				}
 				
-				targetPlayer = null;
-			}
-			else
-			{
-				activeChar.sendMessage("Impossible to set a non Player Target as Donator.");
-				LOGGER.info("GM: " + activeChar.getName() + " is trying to set a non Player Target as Donator.");
+				if (no_token)
+				{
+					activeChar.sendMessage("Usage: //setdonator <char_name> [time](in days)");
+					return false;
+				}
 				
-				return false;
-			}
 			
-			target = null;
+			
+			
+			
+//			
+//			
+//			
+//			
+//			L2Object target = activeChar.getTarget();
+//			
+//			if (target instanceof L2PcInstance)
+//			{
+//				L2PcInstance targetPlayer = (L2PcInstance) target;
+//				final boolean newDonator = !targetPlayer.isDonator();
+//				
+//				if (newDonator)
+//				{
+//					targetPlayer.setDonator(true);
+//					targetPlayer.updateNameTitleColor();
+//					updateDatabase(targetPlayer, true);
+//					sendMessages(true, targetPlayer, activeChar, false, true);
+//					targetPlayer.broadcastPacket(new SocialAction(targetPlayer.getObjectId(), 16));
+//					targetPlayer.broadcastUserInfo();
+//				}
+//				else
+//				{
+//					targetPlayer.setDonator(false);
+//					targetPlayer.updateNameTitleColor();
+//					updateDatabase(targetPlayer, false);
+//					sendMessages(false, targetPlayer, activeChar, false, true);
+//					targetPlayer.broadcastUserInfo();
+//				}
+//				
+//				targetPlayer = null;
+//			}
+//			else
+//			{
+//				activeChar.sendMessage("Impossible to set a non Player Target as Donator.");
+//				LOGGER.info("GM: " + activeChar.getName() + " is trying to set a non Player Target as Donator.");
+//				
+//				return false;
+//			}
+//			
+//			target = null;
 		}
 		return true;
 	}
@@ -184,6 +269,96 @@ public class AdminDonator implements IAdminCommandHandler
 			CloseUtil.close(con);
 		}
 	}
+	
+	public void doDonator(final L2PcInstance activeChar, final L2PcInstance _player, final String _playername, final String _time)
+	{
+		final int days = Integer.parseInt(_time);
+		if (_player == null)
+		{
+			activeChar.sendMessage("not found char" + _playername);
+			return;
+		}
+		
+		if (days > 0)
+		{
+			_player.setDonator(true);
+			_player.setEndTime("donator", days);			
+			Connection connection = null;
+			try
+			{
+				connection = L2DatabaseFactory.getInstance().getConnection(false);
+				
+				final PreparedStatement statement = connection.prepareStatement("REPLACE INTO characters_custom_data (obj_Id, char_name, hero, noble, donator,donator_end_date) VALUES (?,?,?,?,?,?)");
+				statement.setInt(1, _player.getObjectId());
+				statement.setString(2, _player.getName());
+				statement.setInt(3, _player.isHero() ? 1 : 0);
+				statement.setInt(4,_player.isNoble() ? 1 : 0);
+				statement.setInt(5, 1);
+				statement.setLong(6, _player.getDonator_end_date());
+				statement.execute();
+				statement.close();
+				DatabaseUtils.close(statement);
+				connection.close();			
+								
+				_player.broadcastUserInfo();
+				_player.sendPacket(new EtcStatusUpdate(_player));
+				_player.sendMessage("Felicidades ya eres vip durante =>"+_time);
+				_player.broadcastUserInfo();
+			}
+			catch (final Exception e)
+			{
+				if (Config.DEBUG)
+					e.printStackTrace();
+				
+				LOGGER.warn("could not set VIP  stats to char:", e);
+			}
+			finally
+			{
+				CloseUtil.close(connection);
+			}
+		}
+		else
+		{
+			removeDonator(activeChar, _player, _playername);
+		}
+	}
+	
+	public void removeDonator(final L2PcInstance activeChar, final L2PcInstance _player, final String _playername)
+	{
+		_player.setDonator(false);
+		_player.setDonator_end_date(0);
+		
+		Connection connection = null;
+		try
+		{
+			connection = L2DatabaseFactory.getInstance().getConnection(false);
+			
+			final PreparedStatement statement = connection.prepareStatement("UPDATE characters_custom_data SET donator=0, donator_end_date=0 WHERE obj_id=?");
+			statement.setInt(1, _player.getObjectId());
+			statement.execute();
+			DatabaseUtils.close(statement);
+			connection.close();
+			
+			_player.broadcastUserInfo();
+			_player.sendPacket(new EtcStatusUpdate(_player));
+			_player.sendMessage("Tu estado de VIP ah finalizado.");
+			_player.broadcastUserInfo();
+		}
+		catch (final Exception e)
+		{
+			if (Config.DEBUG)
+				e.printStackTrace();
+			
+			LOGGER.warn("could not remove VIP stats of char:", e);
+		}
+		finally
+		{
+			CloseUtil.close(connection);
+		}
+	}
+	
+	
+	
 	
 	// Updates That Will be Executed by MySQL
 	// ----------------------------------------

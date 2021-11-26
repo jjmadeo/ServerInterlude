@@ -191,8 +191,11 @@ public class Escape implements IUserCommandHandler
 					_activeChar.teleToLocation(17836, 170178, -3507, true); // Floran
 					return;
 				}
-				
-				_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+				//spawn random  in giran.
+				_activeChar.teleToLocation(_activeChar.RespownGiran(),true);
+
+				//retail
+				//_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 			}
 			catch (final Throwable e)
 			{

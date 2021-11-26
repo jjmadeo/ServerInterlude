@@ -83,6 +83,7 @@ public abstract class L2Effect
 		FEAR,
 		SALVATION,
 		SILENT_MOVE,
+		HIDE,
 		SIGNET_EFFECT,
 		SIGNET_GROUND,
 		SEED,

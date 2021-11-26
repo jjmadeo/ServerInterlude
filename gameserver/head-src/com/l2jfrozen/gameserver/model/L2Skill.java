@@ -172,6 +172,8 @@ public abstract class L2Skill
 		MUTE,
 		PARALYZE,
 		WEAKNESS,
+		GET_PLAYERPVP,
+		RUSH,
 		
 		// hp, mp, cp
 		HEAL,
@@ -718,6 +720,8 @@ public abstract class L2Skill
 			case PARALYZE:
 			case SLEEP:
 			case ROOT:
+			case GET_PLAYERPVP:
+			case RUSH:
 			case POISON:
 			case MUTE:
 			case WEAKNESS:
@@ -1220,6 +1224,8 @@ public abstract class L2Skill
 			case DOT:
 			case AGGREDUCE:
 			case AGGDAMAGE:
+			case GET_PLAYERPVP:
+			case RUSH:
 			case AGGREDUCE_CHAR:
 			case CONFUSE_MOB_ONLY:
 			case BLEED:
@@ -1307,6 +1313,8 @@ public abstract class L2Skill
 			case AGGDEBUFF:
 			case STUN:
 			case ROOT:
+			case GET_PLAYERPVP:
+			case RUSH:
 			case CONFUSION:
 			case ERASE:
 			case BLOW:
@@ -1524,6 +1532,8 @@ public abstract class L2Skill
 					case DEBUFF:
 					case STUN:
 					case ROOT:
+					case GET_PLAYERPVP:
+					case RUSH:
 					case FEAR:
 					case SLEEP:
 					case MUTE:
@@ -1550,6 +1560,8 @@ public abstract class L2Skill
 					case PARALYZE:
 					case SLEEP:
 					case ROOT:
+					case GET_PLAYERPVP:
+					case RUSH:
 					case WEAKNESS:
 					case MUTE:
 					case CANCEL:

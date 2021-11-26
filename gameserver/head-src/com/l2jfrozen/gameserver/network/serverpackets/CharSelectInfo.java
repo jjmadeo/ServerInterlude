@@ -115,14 +115,21 @@ public class CharSelectInfo extends L2GameServerPacket
 			writeD(0x00); // ??
 			
 			writeD(charInfoPackage.getSex());
-			writeD(charInfoPackage.getRace());
+			if (charInfoPackage.getCustomRaceSkin() == -1)
+				writeD(charInfoPackage.getRace());
+			else
+				writeD(charInfoPackage.getCustomRaceSkin());
 			
-			if (charInfoPackage.getClassId() == charInfoPackage.getBaseClassId())
+			if ((charInfoPackage.getCustomClassSkin() == -1) && (charInfoPackage.getClassId() == charInfoPackage.getBaseClassId()))
 			{
 				writeD(charInfoPackage.getClassId());
 			}
-			else
+			else if(charInfoPackage.getCustomClassSkin()>-1)
 			{
+				// writeD(charInfoPackage.getBaseClassId());
+				writeD(charInfoPackage.getCustomClassSkin());
+
+			}else {
 				writeD(charInfoPackage.getBaseClassId());
 			}
 			
@@ -231,9 +238,9 @@ public class CharSelectInfo extends L2GameServerPacket
 		
 		try
 		{
+
 			con = L2DatabaseFactory.getInstance().getConnection(false);
-			final PreparedStatement statement = con.prepareStatement("SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, base_class FROM characters WHERE account_name=?");
-			statement.setString(1, _loginName);
+			final PreparedStatement statement = con.prepareStatement("SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, base_class,custom_race_skin,custom_class_skin FROM characters WHERE account_name=?");			statement.setString(1, _loginName);
 			final ResultSet charList = statement.executeQuery();
 			
 			while (charList.next())// fills the package
@@ -334,11 +341,16 @@ public class CharSelectInfo extends L2GameServerPacket
 		charInfopackage.setExp(chardata.getLong("exp"));
 		charInfopackage.setSp(chardata.getInt("sp"));
 		charInfopackage.setClanId(chardata.getInt("clanid"));
-		
+
+		final int customRaceSkin = chardata.getInt("custom_race_skin");
+
+		if (customRaceSkin == -1)
 		charInfopackage.setRace(chardata.getInt("race"));
-		
+		else
+		charInfopackage.setCustomRaceSkin(customRaceSkin);
+
 		charInfopackage.setAccessLevel(chardata.getInt("accesslevel"));
-		
+		final int customClassSkin = chardata.getInt("custom_class_skin");
 		final int baseClassId = chardata.getInt("base_class");
 		final int activeClassId = chardata.getInt("classid");
 		
@@ -392,13 +404,19 @@ public class CharSelectInfo extends L2GameServerPacket
 		/*
 		 * Check if the base class is set to zero and alse doesn't match with the current active class, otherwise send the base class ID. This prevents chars created before base class was introduced from being displayed incorrectly.
 		 */
-		if (baseClassId == 0 && activeClassId > 0)
-		{
+
+		if (customClassSkin == -1)
+			if (baseClassId == 0 && activeClassId > 0)
 			charInfopackage.setBaseClassId(activeClassId);
-		}
+			else
+				charInfopackage.setBaseClassId(baseClassId);
 		else
 		{
-			charInfopackage.setBaseClassId(baseClassId);
+			charInfopackage.setCustomClassSkin(customClassSkin);
+			// if (baseClassId == 0 && activeClassId > 0)
+			// charInfopackage.setBaseClassId(activeClassId);
+			// else
+			// charInfopackage.setBaseClassId(baseClassId);
 		}
 		
 		charInfopackage.setDeleteTimer(deletetime);

@@ -50,6 +50,9 @@ public class CharSelectInfoPackage
 	private int _karma = 0;
 	private int _augmentationId = 0;
 	private int _accessLevel;
+	private int _customClassSkin = -1;
+	private int _customRaceSkin = -1;
+
 	
 	/**
 	 * @param objectId
@@ -304,6 +307,26 @@ public class CharSelectInfoPackage
 	{
 		return _accessLevel;
 	}
+	public void setCustomClassSkin(int valor)
+	{
+		_customClassSkin = valor;
+	}
+
+	public void setCustomRaceSkin(int valor)
+	{
+		_customRaceSkin = valor;
+	}
+
+	public int getCustomClassSkin()
+	{
+		return _customClassSkin;
+	}
+
+	public int getCustomRaceSkin()
+	{
+		return _customRaceSkin;
+	}
+
 	
 	public void setAccessLevel(final int accessLevel)
 	{

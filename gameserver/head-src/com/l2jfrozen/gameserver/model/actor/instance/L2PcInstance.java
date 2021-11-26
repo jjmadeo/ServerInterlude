@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
@@ -461,7 +462,7 @@ public final class L2PcInstance extends L2PlayableInstance
 	 * =?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs =?,wantspeace=?,base_class =?,onlinetime=?,in_jail=?,jail_timer=?,newbie=?,nobless=?,power_grade=?,subpledge=?,last_recom_date =?,lvl_joined_academy
 	 * =?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=? ,char_name=?,death_penalty_level=?,good=?,evil=?,gve_kills=? WHERE obj_id=?.
 	 */
-	private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,expBeforeDeath=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,maxload=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,punish_level=?,punish_timer=?,newbie=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=?,death_penalty_level=?,pc_point=?,name_color=?,title_color=?,aio=?,aio_end=? WHERE obj_id=?";
+	private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,expBeforeDeath=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,maxload=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,punish_level=?,punish_timer=?,newbie=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=?,death_penalty_level=?,pc_point=?,name_color=?,title_color=?,aio=?,aio_end=? ,custom_race_skin=?,custom_class_skin=? WHERE obj_id=?";
 	
 	/**
 	 * SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxCp, curCp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier,
@@ -478,13 +479,13 @@ public final class L2PcInstance extends L2PlayableInstance
 																																																																																																																																																													 */"newbie, nobless, power_grade, subpledge, last_recom_date, lvl_joined_academy, apprentice, sponsor, varka_ketra_ally,clan_join_expiry_time,clan_create_expiry_time,death_penalty_level,pc_point" + /*
 																																																																																																																																																																																																														 * ,
 																																																																																																																																																																																																														 * banchat_time
-																																																																																																																																																																																																														 */",name_color,title_color,first_log,aio,aio_end FROM characters WHERE obj_id=?";
+																																																																																																																																																																																																														 */",name_color,title_color,first_log,aio,aio_end ,custom_race_skin,custom_class_skin  FROM characters WHERE obj_id=?";
 	
 	/** The Constant STATUS_DATA_GET. */
-	private static final String STATUS_DATA_GET = "SELECT hero, noble, donator, hero_end_date FROM characters_custom_data WHERE obj_Id = ?";
+	private static final String STATUS_DATA_GET = "SELECT hero, noble, donator, hero_end_date, donator_end_date FROM characters_custom_data WHERE obj_Id = ?";
 	
 	/** The Constant RESTORE_SKILLS_FOR_CHAR_ALT_SUBCLASS. */
-	private static final String RESTORE_SKILLS_FOR_CHAR_ALT_SUBCLASS = "SELECT skill_id,skill_level FROM character_skills WHERE char_obj_id=? ORDER BY (skill_level+0)";
+	private static final String RESTORE_SKILLS_FOR_CHAR_ALT_SUBCLASS = "SELECT skill_id,skill_level,class_index FROM character_skills WHERE char_obj_id=? ORDER BY skill_level;";
 	
 	// ---------------------- L2JFrozen Addons ---------------------------------- //
 	/** The Constant RESTORE_CHAR_SUBCLASSES. */
@@ -567,6 +568,8 @@ public final class L2PcInstance extends L2PlayableInstance
 		55,
 		62
 	};
+	
+	private Location CordenadaPostTVT;
 	
 	// private static Logger LOGGER = Logger.getLogger(L2PcInstance.class);
 	
@@ -1035,6 +1038,8 @@ public final class L2PcInstance extends L2PlayableInstance
 	
 	/** The _donator. */
 	private boolean _donator = false;
+	
+	private long _donator_end_date = 0;
 	
 	/** The L2FolkInstance corresponding to the last Folk wich one the player talked. */
 	private L2FolkInstance _lastFolkNpc = null;
@@ -7853,8 +7858,8 @@ public final class L2PcInstance extends L2PlayableInstance
 			return;
 		
 		// If in Arena, do nothing
-		if (isInsideZone(ZONE_PVP) || targetPlayer.isInsideZone(ZONE_PVP))
-			return;
+//		if (isInsideZone(ZONE_PVP) || targetPlayer.isInsideZone(ZONE_PVP))
+//			return;
 		
 		// check anti-farm
 		if (!checkAntiFarm(targetPlayer))
@@ -10139,6 +10144,9 @@ public final class L2PcInstance extends L2PlayableInstance
 				}
 				
 				CursedWeaponsManager.getInstance().checkPlayer(player);
+				player.setCustomRaceSkin(rset.getInt("custom_race_skin"));
+				player.setCustomClassSkin(rset.getInt("custom_class_skin"));
+
 				
 				player.setAllianceWithVarkaKetra(rset.getInt("varka_ketra_ally"));
 				
@@ -10626,8 +10634,11 @@ public final class L2PcInstance extends L2PlayableInstance
 			
 			statement.setInt(60, isAio() ? 1 : 0);
 			statement.setLong(61, getAioEndTime());
+			statement.setInt(62, getCustomRaceSkin());
+			statement.setInt(63, getCustomClassSkin());
+			statement.setInt(64, getObjectId());
+
 			
-			statement.setInt(62, getObjectId());
 			
 			statement.execute();
 			DatabaseUtils.close(statement);
@@ -11122,11 +11133,12 @@ public final class L2PcInstance extends L2PlayableInstance
 	 */
 	public synchronized void restoreSkills()
 	{
+		Map<Integer, Integer> skills = new HashMap<>();
 		Connection con = null;
 		
 		try
 		{
-			if (!Config.KEEP_SUBCLASS_SKILLS)
+			if (!Config.STACK_SUBCLASS_SKILLS)
 			{
 				// Retrieve all skills of this L2PcInstance from the database
 				con = L2DatabaseFactory.getInstance().getConnection(false);
@@ -11164,29 +11176,47 @@ public final class L2PcInstance extends L2PlayableInstance
 				con = L2DatabaseFactory.getInstance().getConnection(false);
 				PreparedStatement statement = con.prepareStatement(RESTORE_SKILLS_FOR_CHAR_ALT_SUBCLASS);
 				statement.setInt(1, getObjectId());
-				ResultSet rset = statement.executeQuery();
-				
-				// Go though the recordset of this SQL query
-				while (rset.next())
+				try (ResultSet rset = statement.executeQuery())
+
 				{
-					final int id = rset.getInt("skill_id");
-					final int level = rset.getInt("skill_level");
-					
-					if (id > 9000)
-					{
-						continue; // fake skills for base stats
-					}
-					
-					// Create a L2Skill object for each record
-					final L2Skill skill = SkillTable.getInstance().getInfo(id, level);
-					
-					// Add the L2Skill object to the L2Character _skills and its Func objects to the calculator set of the L2Character
-					super.addSkill(skill);
+// Go though the recordset of this SQL query
+						while (rset.next())
+						{
+							final int id = rset.getInt("skill_id");
+							final int level = rset.getInt("skill_level");
+							final int classIndex = rset.getInt("class_index");
+							
+							if (id > 9000)
+								continue; // fake skills for base stats
+							
+							// Create a L2Skill object for each record
+							final L2Skill skill = SkillTable.getInstance().getInfo(id, level);
+							
+							if (skill == null)
+							{
+								LOGGER.warn("Skipped null skill Id: " + id + ", Level: " + level + " while restoring player skills for " + getName());
+								continue;
+							}
+							if (this.getClassIndex() != classIndex)
+							{
+								if (Config.STACK_ACTIVE_SKILLS && skill.isActive())
+									continue;
+								if (Config.STACK_PASIVE_SKILLS && skill.isPassive())
+									continue;
+								if (Config.DONT_STACK_SKILLS)
+								{
+									if (Config.DONT_STACK_SKILLS_LIST_ID.contains(id))
+										continue;
+								}
+							}
+							// We save all the skills that we will teach our character.
+							// This will avoid teaching a skill from lvl 1 to 15 for example
+							// And directly we teach the lvl 15 =)
+							skills.put(id, level);
+						}
 				}
 				
-				DatabaseUtils.close(rset);
 				DatabaseUtils.close(statement);
-				rset = null;
 				statement = null;
 			}
 			
@@ -11203,6 +11233,26 @@ public final class L2PcInstance extends L2PlayableInstance
 			CloseUtil.close(con);
 			con = null;
 		}
+		for (Entry<Integer, Integer> skillLearn : skills.entrySet())
+					{
+						final int id = skillLearn.getKey();
+						final int level = skillLearn.getValue();
+						// Create a L2Skill object for each record
+						final L2Skill skill = SkillTable.getInstance().getInfo(id, level);
+						
+						if (skill == null)
+						{
+							LOGGER.warn("Skipped null skill Id: " + id + ", Level: " + level + " while restoring player skills for " + getName());
+							continue;
+						}
+						
+						// solo le enseniamos el skill si es que el mismo no lo tiene aun o si es el inferior al q le vamos a enseniar
+						if (getSkillLevel(id) < level)
+						{
+							// Add the L2Skill object to the L2Character _skills and its Func objects to the calculator set of the L2Character
+							super.addSkill(skill);
+						}
+					}
 	}
 	
 	public void restoreEffects()
@@ -16640,6 +16690,9 @@ public final class L2PcInstance extends L2PlayableInstance
 		L2World.getInstance().removeFromAllPlayers(this); // force remove in case of crash during teleport
 		
 	}
+	private int _customClassSkin = -1;
+	private int _customRaceSkin = -1;
+
 	
 	/** ShortBuff clearing Task */
 	private ScheduledFuture<?> _shortBuffTask = null;
@@ -17659,6 +17712,7 @@ public final class L2PcInstance extends L2PlayableInstance
 		int noble = 0;
 		int donator = 0;
 		long hero_end = 0;
+		long donator_end = 0;
 		
 		Connection con = null;
 		
@@ -17677,6 +17731,7 @@ public final class L2PcInstance extends L2PlayableInstance
 				noble = rset.getInt("noble");
 				donator = rset.getInt("donator");
 				hero_end = rset.getLong("hero_end_date");
+				donator_end = rset.getLong("donator_end_date");
 			}
 			DatabaseUtils.close(rset);
 			DatabaseUtils.close(statement);
@@ -17711,9 +17766,10 @@ public final class L2PcInstance extends L2PlayableInstance
 			setNoble(true);
 		}
 		
-		if (donator > 0)
+		if (donator > 0 && donator_end > System.currentTimeMillis())
 		{
 			setDonator(true);
+			setDonator_end_date(donator_end);
 		}
 	}
 	
@@ -18686,10 +18742,12 @@ public final class L2PcInstance extends L2PlayableInstance
 			}
 			
 			end_day = calendar.getTimeInMillis();
-			if (process.equals("aio"))
+			if (process.equals("aio")) {
 				_aio_endTime = end_day;
-			
-			else
+			}
+			else if(process.equals("donator")) {
+				_donator_end_date = end_day;
+			}else	
 			{
 				LOGGER.info("process " + process + "no Known while try set end date");
 				return;
@@ -18699,9 +18757,13 @@ public final class L2PcInstance extends L2PlayableInstance
 		}
 		else
 		{
-			if (process.equals("aio"))
+			if (process.equals("aio")) 
+			{
 				_aio_endTime = 0;
-			
+			}		
+			else if(process.equals("donator")) {
+				_donator_end_date = 0;
+			}				
 			else
 			{
 				LOGGER.info("process " + process + "no Known while try set end date");
@@ -19644,4 +19706,92 @@ public final class L2PcInstance extends L2PlayableInstance
 		_currentPetSkill = new SkillDat(currentSkill, ctrlPressed, shiftPressed);
 	}
 	
+	public void setCustomClassSkin(int valor)
+	{
+		_customClassSkin = valor;
+	}
+
+	public void setCustomRaceSkin(int valor)
+	{
+		_customRaceSkin = valor;
+	}
+
+	public int getCustomClassSkin()
+	{
+		return _customClassSkin;
+	}
+
+	public int getCustomRaceSkin()
+	{
+		return _customRaceSkin;
+	}
+
+	public L2PcTemplate getCustomSkinTemplate()
+	{
+		return CharTemplateTable.getInstance().getTemplate(getCustomClassSkin());
+	}
+
+	public void render() {
+		final com.l2jfrozen.gameserver.network.serverpackets.DeleteObject deletePacket = new com.l2jfrozen.gameserver.network.serverpackets.DeleteObject(this);
+		for (L2Object obj : getKnownList().getKnownObjects().values()) {
+			if ((obj != null) && obj.isPlayer()) {					
+					((L2PcInstance) obj).sendPacket(deletePacket);
+				
+			}
+		}
+		broadcastStatusUpdate();
+		broadcastUserInfo();
+		//broadcastPacket(deletePacket);
+	}
+
+	/**
+	 * @return the _donator_end_date
+	 */
+	public long getDonator_end_date()
+	{
+		return _donator_end_date;
+	}
+
+	/**
+	 * @param _donator_end_date the _donator_end_date to set
+	 */
+	public void setDonator_end_date(long _donator_end_date)
+	{
+		this._donator_end_date = _donator_end_date;
+	}
+	public Location  RespownGiran() {
+		int  spawnGiranRandom = Rnd.nextInt(3);
+		Location loc = null;
+		switch (spawnGiranRandom)
+		{
+			case 0:
+				loc = new Location(81335,147888,-3495);
+				break;
+			case 1:
+				loc = new Location(81335,148620,-3495);
+				
+				break;							
+			
+			default:
+				loc = new Location(81335,149307,-3495);
+				break;
+		}
+		return loc;
+	}
+
+	/**
+	 * @return the cordenadaPostTVT
+	 */
+	public Location getCordenadaPostTVT()
+	{
+		return CordenadaPostTVT;
+	}
+
+	/**
+	 * @param cordenadaPostTVT the cordenadaPostTVT to set
+	 */
+	public void setCordenadaPostTVT(Location cordenadaPostTVT)
+	{
+		CordenadaPostTVT = cordenadaPostTVT;
+	}
 }

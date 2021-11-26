@@ -43,6 +43,7 @@ import com.l2jfrozen.gameserver.model.entity.event.manager.EventTask;
 import com.l2jfrozen.gameserver.model.entity.olympiad.Olympiad;
 import com.l2jfrozen.gameserver.model.entity.siege.Castle;
 import com.l2jfrozen.gameserver.model.spawn.L2Spawn;
+import com.l2jfrozen.gameserver.network.gameserverpackets.PlayerAuthRequest;
 import com.l2jfrozen.gameserver.network.serverpackets.ActionFailed;
 import com.l2jfrozen.gameserver.network.serverpackets.MagicSkillUser;
 import com.l2jfrozen.gameserver.network.serverpackets.NpcHtmlMessage;
@@ -823,7 +824,7 @@ public class TvT implements EventTask
 								final L2Party party = player.getParty();
 								party.removePartyMember(player);
 							}
-							
+							player.setCordenadaPostTVT(new Location(player.getX(),player.getY(),player.getZ()));
 							player.teleToLocation(_teamsX.get(_teams.indexOf(player._teamNameTvT)) + Rnd.get(201) - 100, _teamsY.get(_teams.indexOf(player._teamNameTvT)) + Rnd.get(201) - 100, _teamsZ.get(_teams.indexOf(player._teamNameTvT)));
 						}
 					}
@@ -1068,7 +1069,8 @@ public class TvT implements EventTask
 						if (player != null)
 						{
 							if (player.isOnline() != 0)
-								player.teleToLocation(_npcX, _npcY, _npcZ, false);
+								player.teleToLocation(player.getCordenadaPostTVT(), false);
+								//player.teleToLocation(_npcX, _npcY, _npcZ, false);
 							else
 							{
 								java.sql.Connection con = null;
@@ -1077,9 +1079,12 @@ public class TvT implements EventTask
 									con = L2DatabaseFactory.getInstance().getConnection(false);
 									
 									final PreparedStatement statement = con.prepareStatement("UPDATE characters SET x=?, y=?, z=? WHERE char_name=?");
-									statement.setInt(1, _npcX);
-									statement.setInt(2, _npcY);
-									statement.setInt(3, _npcZ);
+									statement.setInt(1, player.getCordenadaPostTVT().getX());
+									statement.setInt(2, player.getCordenadaPostTVT().getY());
+									statement.setInt(3, player.getCordenadaPostTVT().getZ());
+//									statement.setInt(1, _npcX);
+//									statement.setInt(2, _npcY);
+//									statement.setInt(3, _npcZ);
 									statement.setString(4, player.getName());
 									statement.execute();
 									DatabaseUtils.close(statement);

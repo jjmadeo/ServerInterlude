@@ -262,7 +262,7 @@ public class PcKnownList extends PlayableKnownList
 		/*
 		 * TEMP FIX: If player is not visible don't send packets broadcast to all his KnowList. This will avoid GM detection with l2net and olympiad's crash. We can now find old problems with invisible mode.
 		 */
-		if (object_char != null && !active_char.isGM())
+		if (object_char != null /*&& !active_char.isGM()*/)
 		{ // GM has to receive remove however because he can see any invisible or inobservermode player
 		
 			if (!object_char.getAppearance().getInvisible() && !object_char.inObserverMode())
@@ -270,7 +270,7 @@ public class PcKnownList extends PlayableKnownList
 				// Send Server-Client Packet DeleteObject to the L2PcInstance
 				active_char.sendPacket(new DeleteObject(object));
 			}
-			else if (object_char.isGM() && object_char.getAppearance().getInvisible() && !object_char.isTeleporting())
+			else if (/*object_char.isGM() &&*/ object_char.getAppearance().getInvisible() && !object_char.isTeleporting())
 			{
 				// Send Server-Client Packet DeleteObject to the L2PcInstance
 				active_char.sendPacket(new DeleteObject(object));

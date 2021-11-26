@@ -57,26 +57,26 @@ public class AILoader
 	{
 		LOGGER.info("AI load:");
 		
-		LOGGER.info(" - Antharas_l2j");
-		ThreadPoolManager.getInstance().scheduleAi(new Antharas(-1, "antharas", "ai"), 100);
-		
-		LOGGER.info(" - Baium_l2j");
-		ThreadPoolManager.getInstance().scheduleAi(new Baium(-1, "baium", "ai"), 200);
-		
-		LOGGER.info(" - Core");
-		ThreadPoolManager.getInstance().scheduleAi(new Core(-1, "core", "ai"), 300);
-		
-		LOGGER.info(" - Queen Ant");
-		ThreadPoolManager.getInstance().scheduleAi(new QueenAnt(-1, "queen_ant", "ai"), 400);
-		
-		LOGGER.info(" - Van Halter");
-		ThreadPoolManager.getInstance().scheduleAi(new VanHalter(-1, "vanhalter", "ai"), 500);
+//		LOGGER.info(" - Antharas_l2j");
+//		ThreadPoolManager.getInstance().scheduleAi(new Antharas(-1, "antharas", "ai"), 100);
+//		
+//		LOGGER.info(" - Baium_l2j");
+//		ThreadPoolManager.getInstance().scheduleAi(new Baium(-1, "baium", "ai"), 200);
+//		
+//		LOGGER.info(" - Core");
+//		ThreadPoolManager.getInstance().scheduleAi(new Core(-1, "core", "ai"), 300);
+//		
+//		LOGGER.info(" - Queen Ant");
+//		ThreadPoolManager.getInstance().scheduleAi(new QueenAnt(-1, "queen_ant", "ai"), 400);
+//		
+//		LOGGER.info(" - Van Halter");
+//		ThreadPoolManager.getInstance().scheduleAi(new VanHalter(-1, "vanhalter", "ai"), 500);
 		LOGGER.info(" - Gordon");
 		ThreadPoolManager.getInstance().scheduleAi(new Gordon(-1, "Gordon", "ai"), 600);
 		
-		LOGGER.info(" - Monastery_l2j");
-		ThreadPoolManager.getInstance().scheduleAi(new Monastery(-1, "monastery", "ai"), 700);
-		
+//		LOGGER.info(" - Monastery_l2j");
+//		ThreadPoolManager.getInstance().scheduleAi(new Monastery(-1, "monastery", "ai"), 700);
+//		
 		LOGGER.info(" - Transform");
 		ThreadPoolManager.getInstance().scheduleAi(new Transform(-1, "transform", "ai"), 800);
 		LOGGER.info(" - Fairy Trees");
@@ -98,17 +98,17 @@ public class AILoader
 		LOGGER.info(" - Barakiel");
 		ThreadPoolManager.getInstance().scheduleAi(new Barakiel(-1, "Barakiel", "ai"), 1700);
 		
-		LOGGER.info(" - Orfen");
-		ThreadPoolManager.getInstance().scheduleAi(new Orfen(-1, "Orfen", "ai"), 1800);
-		
-		LOGGER.info(" - Zaken_l2j");
-		ThreadPoolManager.getInstance().scheduleAi(new Zaken(-1, "Zaken", "ai"), 1900);
-		
-		LOGGER.info(" - Frintezza_l2j");
-		ThreadPoolManager.getInstance().scheduleAi(new Frintezza(-1, "Frintezza", "ai"), 2000);
-		
-		LOGGER.info(" - Valakas_l2j");
-		ThreadPoolManager.getInstance().scheduleAi(new Valakas(-1, "valakas", "ai"), 2100);
-		
+//		LOGGER.info(" - Orfen");
+//		ThreadPoolManager.getInstance().scheduleAi(new Orfen(-1, "Orfen", "ai"), 1800);
+//		
+//		LOGGER.info(" - Zaken_l2j");
+//		ThreadPoolManager.getInstance().scheduleAi(new Zaken(-1, "Zaken", "ai"), 1900);
+//		
+//		LOGGER.info(" - Frintezza_l2j");
+//		ThreadPoolManager.getInstance().scheduleAi(new Frintezza(-1, "Frintezza", "ai"), 2000);
+//		
+//		LOGGER.info(" - Valakas_l2j");
+//		ThreadPoolManager.getInstance().scheduleAi(new Valakas(-1, "valakas", "ai"), 2100);
+//		
 	}
 }

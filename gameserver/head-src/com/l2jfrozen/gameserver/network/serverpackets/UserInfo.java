@@ -21,6 +21,7 @@
 package com.l2jfrozen.gameserver.network.serverpackets;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.l2jfrozen.Config;
 import com.l2jfrozen.gameserver.datatables.sql.NpcTable;
@@ -109,15 +110,36 @@ public class UserInfo extends L2GameServerPacket
 		
 		writeD(_activeChar.getObjectId());
 		writeS(_activeChar.getName());
-		writeD(_activeChar.getRace().ordinal());
+		
+		if (_activeChar.getCustomRaceSkin() == -1) {
+
+			writeD(_activeChar.getRace().ordinal());
+
+		}
+		else {
+
+			writeD(_activeChar.getCustomRaceSkin());
+			
+
+		}
+			// writeD(_activeChar.getRace().ordinal());
+
 		writeD(_activeChar.getAppearance().getSex() ? 1 : 0);
 		
-		if (_activeChar.getClassIndex() == 0)
+		// if ((_activeChar.getClassIndex() == 0)
+		// {
+		if (_activeChar.getCustomClassSkin() == -1 && (_activeChar.getClassIndex() == 0))
 		{
+
 			writeD(_activeChar.getClassId().getId());
 		}
-		else
+		else if(_activeChar.getCustomClassSkin()>-1)
 		{
+			writeD(_activeChar.getCustomClassSkin());
+			// else
+			// writeD(_activeChar.getBaseClass());
+
+		}else {
 			writeD(_activeChar.getBaseClass());
 		}
 		
@@ -243,8 +265,21 @@ public class UserInfo extends L2GameServerPacket
 		}
 		else
 		{
-			writeF(_activeChar.getBaseTemplate().collisionRadius);
-			writeF(_activeChar.getBaseTemplate().collisionHeight);
+
+			
+			if (_activeChar.getCustomRaceSkin() == -1)
+			{
+				writeF(_activeChar.getBaseTemplate().getCollisionRadius());
+				writeF(_activeChar.getBaseTemplate().getCollisionHeight());
+			}
+			else
+			{
+
+				writeF(_activeChar.getCustomSkinTemplate().getCollisionRadius());
+				writeF(_activeChar.getCustomSkinTemplate().getCollisionHeight());
+			}
+
+			
 		}
 		
 		writeD(_activeChar.getAppearance().getHairStyle());

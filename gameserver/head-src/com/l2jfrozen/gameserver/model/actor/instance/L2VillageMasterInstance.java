@@ -1050,8 +1050,10 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 			charClassId = player.getClassId().getParent().ordinal();
 		}
 		
-		final PlayerRace npcRace = getVillageMasterRace();
-		final ClassType npcTeachType = getVillageMasterTeachType();
+//		final PlayerRace npcRace = getVillageMasterRace();
+//		final ClassType npcTeachType = getVillageMasterTeachType();
+		getVillageMasterRace();
+		getVillageMasterTeachType();
 		
 		PlayerClass currClass = PlayerClass.values()[charClassId];
 		
@@ -1087,29 +1089,29 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 					}
 				}
 				
-				if (npcRace == PlayerRace.Human || npcRace == PlayerRace.LightElf)
-				{
-					// If the master is human or light elf, ensure that fighter-type
-					// masters only teach fighter classes, and priest-type masters
-					// only teach priest classes etc.
-					if (!availSub.isOfType(npcTeachType))
-					{
-						availSubs.remove(availSub);
-					}
-					else if (!availSub.isOfRace(PlayerRace.Human) && !availSub.isOfRace(PlayerRace.LightElf))
-					{
-						availSubs.remove(availSub);
-					}
-				}
-				else
-				{
-					// If the master is not human and not light elf,
-					// then remove any classes not of the same race as the master.
-					if (npcRace != PlayerRace.Human && npcRace != PlayerRace.LightElf && !availSub.isOfRace(npcRace))
-					{
-						availSubs.remove(availSub);
-					}
-				}
+//				if (npcRace == PlayerRace.Human || npcRace == PlayerRace.LightElf)
+//				{
+//					// If the master is human or light elf, ensure that fighter-type
+//					// masters only teach fighter classes, and priest-type masters
+//					// only teach priest classes etc.
+//					if (!availSub.isOfType(npcTeachType))
+//					{
+//						availSubs.remove(availSub);
+//					}
+//					else if (!availSub.isOfRace(PlayerRace.Human) && !availSub.isOfRace(PlayerRace.LightElf))
+//					{
+//						availSubs.remove(availSub);
+//					}
+//				}
+//				else
+//				{
+//					// If the master is not human and not light elf,
+//					// then remove any classes not of the same race as the master.
+//					if (npcRace != PlayerRace.Human && npcRace != PlayerRace.LightElf && !availSub.isOfRace(npcRace))
+//					{
+//						availSubs.remove(availSub);
+//					}
+//				}
 			}
 		}
 		currClass = null;
