@@ -246,31 +246,36 @@ public enum PlayerClass
 	{
 		Set<PlayerClass> subclasses = null;
 		
-		if (_level == Third)
+		player.sendMessage(_level.toString());
+		//if (_level == Third)
+		player.sendMessage("Class index : "+ player.getClassIndex());
+		
+		if (_level == Third || (_level == Second && player.getClassIndex() >= 1)	)
 		{
+			player.sendMessage("Entre al if third");
 			subclasses = EnumSet.copyOf(mainSubclassSet);
 			
 			//subclasses.removeAll(neverSubclassed);
 			subclasses.remove(this);
 			
-			switch (player.getRace())
-			{
-				case elf:
-					subclasses.removeAll(getSet(DarkElf, Third));
-					break;
-				case darkelf:
-					subclasses.removeAll(getSet(LightElf, Third));
-					break;
-			}
-			
-			Set<PlayerClass> unavailableClasses = subclassSetMap.get(this);
-			
-			if (unavailableClasses != null)
-			{
-				subclasses.removeAll(unavailableClasses);
-			}
+//			switch (player.getRace())
+//			{
+//				case elf:
+//					subclasses.removeAll(getSet(DarkElf, Third));
+//					break;
+//				case darkelf:
+//					subclasses.removeAll(getSet(LightElf, Third));
+//					break;
+//			}
 //			
-			unavailableClasses = null;
+		//	Set<PlayerClass> unavailableClasses = subclassSetMap.get(this);
+			
+//			if (unavailableClasses != null)
+//			{
+//				subclasses.removeAll(unavailableClasses);
+//			}
+//			
+//			unavailableClasses = null;
 		}
 		
 		return subclasses;

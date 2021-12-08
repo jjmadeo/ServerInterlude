@@ -609,6 +609,8 @@ public final class Config
 	public static int MAX_PETITIONS_PENDING;
 	public static boolean ANNOUNCE_MAMMON_SPAWN;
 	public static boolean ENABLE_MODIFY_SKILL_DURATION;
+	public static int DISABLERS_DURATION;
+
 	public static FastMap<Integer, Integer> SKILL_DURATION_LIST;
 	/** Chat Filter **/
 	public static int CHAT_FILTER_PUNISHMENT_PARAM1;
@@ -627,7 +629,18 @@ public final class Config
 	public static boolean ALLOW_QUAKE_SYSTEM;
 	public static boolean ENABLE_ANTI_PVP_FARM_MSG;
 	
-	public static long CLICK_TASK;
+	public static long CLICK_TASK;	
+	
+	public static int ITEM_ID;
+	public static int ARGUMENT_PRICE;
+	public static int NOBLESS_PRICE;
+	public static int VIP_7_PRICE;
+	public static int VIP_15_PRICE;
+	public static int VIP_30_PRICE;
+	public static int VIP_90_PRICE;
+	public static int SEX_CHANGE_PRICE;
+	public static int CLAN_FULL_PRICE;
+	public static int SKIN_CHANGE_PRICE;
 	
 	// ============================================================
 	public static void loadOtherConfig()
@@ -646,6 +659,8 @@ public final class Config
 			EFFECT_CANCELING = Boolean.valueOf(otherSettings.getProperty("CancelLesserEffect", "True"));
 			WYVERN_SPEED = Integer.parseInt(otherSettings.getProperty("WyvernSpeed", "100"));
 			STRIDER_SPEED = Integer.parseInt(otherSettings.getProperty("StriderSpeed", "80"));
+			DISABLERS_DURATION = Integer.parseInt(otherSettings.getProperty("DisablersDurationSkills", "0"));
+
 			ALLOW_WYVERN_UPGRADER = Boolean.valueOf(otherSettings.getProperty("AllowWyvernUpgrader", "False"));
 			
 			/* Select hit task */
@@ -806,6 +821,19 @@ public final class Config
 			
 			STORE_SKILL_COOLTIME = Boolean.parseBoolean(otherSettings.getProperty("StoreSkillCooltime", "true"));
 			
+			
+			//GM SERVICIOS CONFIG Precios y moneda
+			ITEM_ID = Integer.parseInt(otherSettings.getProperty("ItemIDCommerce", "1"));
+			ARGUMENT_PRICE = Integer.parseInt(otherSettings.getProperty("ArgumentPrecio", "1"));
+			NOBLESS_PRICE = Integer.parseInt(otherSettings.getProperty("NoblessPrecio", "1"));
+			VIP_7_PRICE = Integer.parseInt(otherSettings.getProperty("Vip7diasPrecio", "1"));
+			VIP_15_PRICE = Integer.parseInt(otherSettings.getProperty("Vip15diasPrecio", "1"));
+			VIP_30_PRICE = Integer.parseInt(otherSettings.getProperty("Vip30diasPrecio", "1"));
+			VIP_90_PRICE = Integer.parseInt(otherSettings.getProperty("Vip90diasPrecio", "1"));
+			SEX_CHANGE_PRICE = Integer.parseInt(otherSettings.getProperty("CambioSexoPrecio", "1"));
+			CLAN_FULL_PRICE = Integer.parseInt(otherSettings.getProperty("ClanFullPrecio", "1"));
+			SKIN_CHANGE_PRICE = Integer.parseInt(otherSettings.getProperty("CambioSkinPrecio", "1"));
+			
 			PET_RENT_NPC = otherSettings.getProperty("ListPetRentNpc", "30827");
 			LIST_PET_RENT_NPC = new FastList<>();
 			for (final String id : PET_RENT_NPC.split(","))
@@ -904,6 +932,14 @@ public final class Config
 			e.printStackTrace();
 			throw new Error("Failed to Load " + OTHER + " File.");
 		}
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 	
 	// ============================================================

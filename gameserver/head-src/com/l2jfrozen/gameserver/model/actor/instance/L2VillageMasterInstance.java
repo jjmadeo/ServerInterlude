@@ -1065,6 +1065,8 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 		
 		final Set<PlayerClass> availSubs = currClass.getAvailableSubclasses(player);
 		
+		
+		
 		if (availSubs != null)
 		{
 			for (final PlayerClass availSub : availSubs)
@@ -1089,29 +1091,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 					}
 				}
 				
-//				if (npcRace == PlayerRace.Human || npcRace == PlayerRace.LightElf)
-//				{
-//					// If the master is human or light elf, ensure that fighter-type
-//					// masters only teach fighter classes, and priest-type masters
-//					// only teach priest classes etc.
-//					if (!availSub.isOfType(npcTeachType))
-//					{
-//						availSubs.remove(availSub);
-//					}
-//					else if (!availSub.isOfRace(PlayerRace.Human) && !availSub.isOfRace(PlayerRace.LightElf))
-//					{
-//						availSubs.remove(availSub);
-//					}
-//				}
-//				else
-//				{
-//					// If the master is not human and not light elf,
-//					// then remove any classes not of the same race as the master.
-//					if (npcRace != PlayerRace.Human && npcRace != PlayerRace.LightElf && !availSub.isOfRace(npcRace))
-//					{
-//						availSubs.remove(availSub);
-//					}
-//				}
+
 			}
 		}
 		currClass = null;
