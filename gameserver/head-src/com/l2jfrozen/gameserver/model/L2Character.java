@@ -1341,6 +1341,12 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 			player.updatePvPStatus(target);
 		}
 		
+		
+		if(target instanceof L2RaidBossInstance) {
+			this.startPvPFlag();
+			this.setPvpFlagLasts(System.currentTimeMillis() + Config.PVP_PVP_TIME);
+		}
+		
 		// Check if hit isn't missed
 		if (!hitted)
 		{

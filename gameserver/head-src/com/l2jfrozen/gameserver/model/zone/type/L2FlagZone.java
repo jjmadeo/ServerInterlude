@@ -18,6 +18,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import com.l2jfrozen.Config;
 import com.l2jfrozen.gameserver.datatables.SkillTable;
 import com.l2jfrozen.gameserver.model.L2Character;
 import com.l2jfrozen.gameserver.model.L2Skill;
@@ -132,7 +133,9 @@ private static final L2Skill NOBLESSE = SkillTable.getInstance().getInfo(1323, 1
         	
         		((L2PcInstance) character).setInsideZone(L2Character.ZONE_PVP, false);
         		((L2PcInstance) character).setInZonaPVP(false);
-                ((L2PcInstance) character).setPvpFlag(0);
+               // ((L2PcInstance) character).setPvpFlag(0);
+        		((L2PcInstance) character).startPvPFlag();
+        		((L2PcInstance) character).setPvpFlagLasts(System.currentTimeMillis() + Config.PVP_PVP_TIME);
                 ((L2PcInstance) character).sendMessage("Saliste de la Zona de PVP");
                 ((L2PcInstance) character).broadcastUserInfo();
         }

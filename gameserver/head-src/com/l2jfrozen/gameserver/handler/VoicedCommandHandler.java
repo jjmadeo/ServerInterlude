@@ -33,6 +33,7 @@ import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.BankingCmd;
 import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.CTFCmd;
 import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.DMCmd;
 import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.FarmPvpCmd;
+import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.Inventario;
 import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.OfflineShop;
 import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.Online;
 import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.StatsCmd;
@@ -68,6 +69,7 @@ public class VoicedCommandHandler
 		_datatable = new FastMap<>();
 		
 		registerVoicedCommandHandler(new Voting());
+		registerVoicedCommandHandler(new Inventario());
 		
 		if (Config.BANKING_SYSTEM_ENABLED)
 		{

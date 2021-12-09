@@ -48,8 +48,10 @@ import com.l2jfrozen.gameserver.network.serverpackets.SystemMessage;
 import com.l2jfrozen.gameserver.network.serverpackets.ValidateLocation;
 import com.l2jfrozen.gameserver.skills.Formulas;
 import com.l2jfrozen.gameserver.skills.Stats;
+import com.l2jfrozen.gameserver.taskmanager.tasks.CustomCancelTaskManager;
 import com.l2jfrozen.util.random.Rnd;
-
+import java.util.Vector;
+import com.l2jfrozen.gameserver.thread.ThreadPoolManager;
 /**
  * This Handles Disabler skills
  * @author _drunk_
@@ -442,7 +444,7 @@ public class Disablers implements ISkillHandler
 				}
 				case MAGE_BANE:
 				{
-					
+					Vector<L2Skill> cancelledBuffs = new Vector<>();
 					for (final L2Object t : targets)
 					{
 						L2Character target1 = (L2Character) t;
@@ -459,14 +461,20 @@ public class Disablers implements ISkillHandler
 						for (final L2Effect e : effects)
 						{
 							
-							if (e.getStackType().equals("mAtkSpeedUp") || e.getStackType().equals("mAtk") || e.getSkill().getId() == 1059 || e.getSkill().getId() == 1085 || e.getSkill().getId() == 4356 || e.getSkill().getId() == 4355)
+							if (e.getStackType().equals("mAtkSpeedUp") || e.getStackType().equals("mAtk") || e.getSkill().getId() == 1059 || e.getSkill().getId() == 1085 || e.getSkill().getId() == 4356 || e.getSkill().getId() == 4355) {
 								e.exit();
+								if (!cancelledBuffs.contains(e.getSkill()) && !((L2PcInstance)activeChar).isInOlympiadMode())
+									 cancelledBuffs.add(e.getSkill());
+							}
 						}
+						if (cancelledBuffs.size() > 0)
+							 ThreadPoolManager.getInstance().scheduleGeneral(new CustomCancelTaskManager((L2PcInstance)target1, cancelledBuffs), 15 *1000);
 					}
 					break;
 				}
 				case WARRIOR_BANE:
 				{
+					Vector<L2Skill> cancelledBuffs = new Vector<>();
 					for (final L2Object t : targets)
 					{
 						L2Character target1 = (L2Character) t;
@@ -481,14 +489,21 @@ public class Disablers implements ISkillHandler
 						final L2Effect[] effects = target1.getAllEffects();
 						for (final L2Effect e : effects)
 						{
-							if (e.getStackType().equals("SpeedUp") || e.getStackType().equals("pAtkSpeedUp") || e.getSkill().getId() == 1204 || e.getSkill().getId() == 1086 || e.getSkill().getId() == 4342 || e.getSkill().getId() == 4357)
+							if (e.getStackType().equals("SpeedUp") || e.getStackType().equals("pAtkSpeedUp") || e.getSkill().getId() == 1204 || e.getSkill().getId() == 1086 || e.getSkill().getId() == 4342 || e.getSkill().getId() == 4357) {
 								e.exit();
+								if (!cancelledBuffs.contains(e.getSkill()) && !((L2PcInstance)activeChar).isInOlympiadMode())
+									 cancelledBuffs.add(e.getSkill());
+							}
 						}
+						if (cancelledBuffs.size() > 0)
+							 ThreadPoolManager.getInstance().scheduleGeneral(new CustomCancelTaskManager((L2PcInstance)target1, cancelledBuffs), 15 *1000);
 					}
 					break;
 				}
 				case CANCEL:
 				{
+					
+					Vector<L2Skill> cancelledBuffs = new Vector<>();
 					if (target.reflectSkill(skill))
 						target = activeChar;
 					
@@ -561,6 +576,11 @@ public class Disablers implements ISkillHandler
 										
 										if (Rnd.get(100) < rate)
 										{
+											
+											 if (!cancelledBuffs.contains(e.getSkill()) && !((L2PcInstance)activeChar).isInOlympiadMode())
+												 cancelledBuffs.add(e.getSkill());
+
+												
 											e.exit(true);
 											maxfive--;
 											if (maxfive == 0)
@@ -569,6 +589,11 @@ public class Disablers implements ISkillHandler
 									}
 								}
 							}
+		
+							 if (cancelledBuffs.size() > 0)
+								 ThreadPoolManager.getInstance().scheduleGeneral(new CustomCancelTaskManager((L2PcInstance)target, cancelledBuffs), 15 *1000);
+
+								
 							effects = null;
 						}
 						else
@@ -618,6 +643,9 @@ public class Disablers implements ISkillHandler
 									
 									if (Rnd.get(100) < rate)
 									{
+										 
+										if (!cancelledBuffs.contains(e.getSkill()) && !((L2PcInstance)activeChar).isInOlympiadMode())
+											 cancelledBuffs.add(e.getSkill());
 										e.exit(true);
 										maxdisp--;
 										if (maxdisp == 0)
@@ -626,6 +654,10 @@ public class Disablers implements ISkillHandler
 								}
 							}
 						}
+						
+						if (cancelledBuffs.size() > 0)
+							ThreadPoolManager.getInstance().scheduleGeneral(new CustomCancelTaskManager((L2PcInstance)target, cancelledBuffs), 15 *1000);
+
 						// effects = null;
 					}
 					else
