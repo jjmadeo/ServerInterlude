@@ -31,12 +31,13 @@ public class HeroSkillTable
 	
 	private HeroSkillTable()
 	{
-		_heroSkills = new L2Skill[5];
+		_heroSkills = new L2Skill[6];
 		_heroSkills[0] = SkillTable.getInstance().getInfo(395, 1);
 		_heroSkills[1] = SkillTable.getInstance().getInfo(396, 1);
 		_heroSkills[2] = SkillTable.getInstance().getInfo(1374, 1);
 		_heroSkills[3] = SkillTable.getInstance().getInfo(1375, 1);
 		_heroSkills[4] = SkillTable.getInstance().getInfo(1376, 1);
+		_heroSkills[5] = SkillTable.getInstance().getInfo(5287, 1);
 	}
 	
 	public static HeroSkillTable getInstance()
@@ -62,7 +63,8 @@ public class HeroSkillTable
 			396,
 			1374,
 			1375,
-			1376
+			1376,
+			5287
 		};
 		
 		for (final int id : _HeroSkillsId)
