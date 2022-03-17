@@ -1019,24 +1019,29 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 		
 		//****** Inicio de agregado de codigo./////
 		//****** CODIGO EXCLUSIVO PARA REVELAR  PJS INVISIBLES QUE ATAQUEN A OTROS//////
-		L2PcInstance a = (L2PcInstance)this;
-		if(a.getAppearance().getInvisible() && !a.isGM()) {
-			LOGGER.info("Entre en doAttack");
-			L2Effect[] efectos = a.getAllEffects();
-			for (L2Effect effect : efectos)
-			{
-				if(effect.getEffectType() == EffectType.HIDE) {
-					LOGGER.info("Entre al efecto Hide");
-					effect.onExit();
-					
-					a.getAppearance().setVisible();
-					a.render();
+		
+		if(this instanceof L2PcInstance) {
+			L2PcInstance a = (L2PcInstance)this;
+			if(a.getAppearance().getInvisible() && !a.isGM()) {
+				LOGGER.info("Entre en doAttack");
+				L2Effect[] efectos = a.getAllEffects();
+				for (L2Effect effect : efectos)
+				{
+					if(effect.getEffectType() == EffectType.HIDE) {
+						LOGGER.info("Entre al efecto Hide");
+						effect.onExit();
+						
+						a.getAppearance().setVisible();
+						a.render();
+					}
 				}
+				
+				LOGGER.info("Termine");
+				
 			}
-			
-			LOGGER.info("Termine");
-			
 		}
+		
+		
 		//****** Aca termina el codigo agregado.//////
 		
 		if (target == null)
