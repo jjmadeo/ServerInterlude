@@ -2404,10 +2404,10 @@ public final class Formulas
 		final int deltamod = calcLvlDependModifier(attacker.getOwner(), target, skill);
 		rate += deltamod;
 		
-		if (rate > skill.getMaxChance())
-			rate = skill.getMaxChance();
-		else if (rate < skill.getMinChance())
-			rate = skill.getMinChance();
+		if (rate > Config.CHANCE_SKILL_MAX)
+			rate =  Config.CHANCE_SKILL_MAX;
+		else if (rate < Config.CHANCE_SKILL_MIN)
+			rate = Config.CHANCE_SKILL_MIN;
 		
 		if (Config.SKILLSDEBUG)
 		{
@@ -2416,7 +2416,7 @@ public final class Formulas
 			final String result = stat.toString();
 			LOGGER.info(result);
 		}
-		return (Rnd.get(100) < rate);
+		return (Rnd.get(Config.CHANCE_SKILL_RATE) < rate);
 	}
 	
 	public boolean calcSkillSuccess(final L2Character attacker, final L2Character target, final L2Skill skill, final boolean ss, final boolean sps, final boolean bss)

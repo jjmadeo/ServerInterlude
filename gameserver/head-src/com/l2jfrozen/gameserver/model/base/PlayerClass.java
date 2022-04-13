@@ -246,13 +246,13 @@ public enum PlayerClass
 	{
 		Set<PlayerClass> subclasses = null;
 		
-		player.sendMessage(_level.toString());
+		
 		//if (_level == Third)
-		player.sendMessage("Class index : "+ player.getClassIndex());
+		
 		
 		if (_level == Third || (_level == Second && player.getClassIndex() >= 1)	)
 		{
-			player.sendMessage("Entre al if third");
+			
 			subclasses = EnumSet.copyOf(mainSubclassSet);
 			
 			//subclasses.removeAll(neverSubclassed);

@@ -540,6 +540,7 @@ abstract class DocumentBase
 				final int lvl = Integer.decode(getValue(a.getNodeValue(), null));
 				cond = joinAnd(cond, new ConditionPlayerLevel(lvl));
 			}
+			
 			else if ("resting".equalsIgnoreCase(a.getNodeName()))
 			{
 				final boolean val = Boolean.valueOf(a.getNodeValue());
@@ -784,6 +785,7 @@ abstract class DocumentBase
 				final int id = Integer.parseInt(a.getNodeValue());
 				cond = joinAnd(cond, new ConditionUsingSkill(id));
 			}
+			
 			else if ("slotitem".equalsIgnoreCase(a.getNodeName()))
 			{
 				final StringTokenizer st = new StringTokenizer(a.getNodeValue(), ";");

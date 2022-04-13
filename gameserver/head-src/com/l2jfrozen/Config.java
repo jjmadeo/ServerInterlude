@@ -4111,6 +4111,35 @@ public final class Config
 	}
 	
 	// ============================================================
+	public static int CHANCE_SKILL_MAX;
+	public static int CHANCE_SKILL_MIN;
+	public static int CHANCE_SKILL_RATE;
+	// ============================================================
+
+		public static void loadCustom()
+		{
+			final String CUSTOM = FService.CUSTOMS;
+			
+			try
+			{
+				final L2Properties p = new L2Properties(CUSTOM);
+				
+				CHANCE_SKILL_MAX = Integer.parseInt(p.getProperty("ChanceSkillMax", "99"));
+				CHANCE_SKILL_MIN = Integer.parseInt(p.getProperty("ChanceSkillMin", "1"));
+				CHANCE_SKILL_RATE = Integer.parseInt(p.getProperty("ChanceSkillRate", "100"));
+				
+				
+			}
+			catch (final Exception e)
+			{
+				if (Config.ENABLE_ALL_EXCEPTIONS)
+					e.printStackTrace();
+				
+				LOGGER.warn("Failed to load " + CUSTOM + " file");
+			}
+		}
+		
+	// ============================================================
 	public static Map<String, List<String>> EXTENDERS;
 	
 	// ============================================================
@@ -4614,6 +4643,7 @@ public final class Config
 			loadPCBPointConfig();
 			loadOfflineConfig();
 			loadPowerPak();
+			loadCustom();
 			
 			// Other
 			loadKeyOptions();
