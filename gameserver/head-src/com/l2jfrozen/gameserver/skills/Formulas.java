@@ -2512,10 +2512,10 @@ public final class Formulas
 		final int deltamod = calcLvlDependModifier(attacker, target, skill);
 		rate += deltamod;
 		
-		if (rate > skill.getMaxChance())
-			rate = skill.getMaxChance();
-		else if (rate < skill.getMinChance())
-			rate = skill.getMinChance();
+		if (rate > Config.CHANCE_SKILL_MAX)
+			rate = Config.CHANCE_SKILL_MAX;
+		else if (rate < Config.CHANCE_SKILL_MIN)
+			rate = Config.CHANCE_SKILL_MIN;
 		
 		// physics configuration addons
 		final float physics_mult = getChanceMultiplier(skill);
@@ -2534,7 +2534,7 @@ public final class Formulas
 		if (attacker instanceof L2PcInstance && Config.SEND_SKILLS_CHANCE_TO_PLAYERS)
 			((L2PcInstance) attacker).sendMessage("Skill: " + skill.getName() + " Chance: " + rate + "%");
 		
-		return Rnd.get(100) < rate;
+		return Rnd.get(Config.CHANCE_SKILL_RATE) < rate;
 	}
 	
 	public static boolean calcEffectSuccess(final L2Character attacker, final L2Character target, final EffectTemplate effect, final L2Skill skill, final boolean ss, final boolean sps, final boolean bss)
@@ -2629,10 +2629,10 @@ public final class Formulas
 		final int deltamod = calcLvlDependModifier(attacker, target, skill);
 		rate += deltamod;
 		
-		if (rate > skill.getMaxChance())
-			rate = skill.getMaxChance();
-		else if (rate < skill.getMinChance())
-			rate = skill.getMinChance();
+		if (rate > Config.CHANCE_SKILL_MAX)
+			rate = Config.CHANCE_SKILL_MAX;
+		else if (rate < Config.CHANCE_SKILL_MIN)
+			rate = Config.CHANCE_SKILL_MIN;
 		
 		// physics configuration addons
 		final float physics_mult = getChanceMultiplier(skill);
@@ -2651,7 +2651,7 @@ public final class Formulas
 		if (attacker instanceof L2PcInstance && Config.SEND_SKILLS_CHANCE_TO_PLAYERS)
 			((L2PcInstance) attacker).sendMessage("EffectType " + effect.effectType + " Chance: " + rate + "%");
 		
-		return (Rnd.get(100) < rate);
+		return (Rnd.get(Config.CHANCE_SKILL_RATE) < rate);
 	}
 	
 	public static double calcSkillTypeVulnerability(double multiplier, final L2Character target, final SkillType type)

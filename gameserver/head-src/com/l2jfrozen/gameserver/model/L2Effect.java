@@ -477,6 +477,7 @@ public abstract class L2Effect
 	
 	public final void scheduleEffect()
 	{
+		
 		if (_state == EffectState.CREATED)
 		{
 			_state = EffectState.ACTING;
@@ -493,6 +494,7 @@ public abstract class L2Effect
 			
 			if (_count > 1)
 			{
+
 				startEffectTaskAtFixedRate(5, _period * 1000);
 				return;
 			}

@@ -73,6 +73,10 @@ public final class RequestEnchantItem extends L2GameClientPacket
 		6575,
 		6577
 	};
+	private static final int[] LEGENDS_SCROLLS =
+	{
+		9523
+	};
 	
 	private static final int[] CRYSTAL_WEAPON_SCROLLS =
 	{
@@ -186,6 +190,8 @@ public final class RequestEnchantItem extends L2GameClientPacket
 		boolean enchantItem = false;
 		boolean blessedScroll = false;
 		boolean crystalScroll = false;
+		boolean LegendScroll = false;
+
 		int crystalId = 0;
 		
 		/** pretty code ;D */
@@ -299,6 +305,12 @@ public final class RequestEnchantItem extends L2GameClientPacket
 							enchantItem = true;
 						}
 						break;
+					case 9523:
+						if (itemType2 == L2Item.TYPE2_SHIELD_ARMOR || itemType2 == L2Item.TYPE2_ACCESSORY || itemType2 == L2Item.TYPE2_WEAPON)
+						{
+							enchantItem = true;
+						}
+						break;
 				}
 				break;
 		}
@@ -313,6 +325,8 @@ public final class RequestEnchantItem extends L2GameClientPacket
 		if (scroll.getItemId() >= 6569 && scroll.getItemId() <= 6578)
 		{
 			blessedScroll = true;
+		}else if(scroll.getItemId() == 9523) {
+			LegendScroll = true;
 		}
 		else
 		{
@@ -353,6 +367,31 @@ public final class RequestEnchantItem extends L2GameClientPacket
 						else
 						{
 							chance = Config.BLESS_WEAPON_ENCHANT_LEVEL.get(item.getEnchantLevel() + 1);
+						}
+						maxEnchantLevel = Config.ENCHANT_WEAPON_MAX;
+						
+						break;
+					}
+				}
+				
+			}else if (LegendScroll)
+			{
+				
+				for (final int legendscroll : LEGENDS_SCROLLS)
+				{
+					if (scroll.getItemId() == legendscroll)
+					{
+						if (item.getEnchantLevel() >= Config.LEGEND_ENCHANT_LEVEL.size()) // the hash has size equals to
+																								// max enchant, so if the actual
+																								// enchant level is equal or more then max
+																								// then the enchant rate is equal to last
+																								// enchant rate
+						{
+							chance = Config.LEGEND_ENCHANT_LEVEL.get(Config.LEGEND_ENCHANT_LEVEL.size());
+						}
+						else
+						{
+							chance = Config.LEGEND_ENCHANT_LEVEL.get(item.getEnchantLevel() + 1);
 						}
 						maxEnchantLevel = Config.ENCHANT_WEAPON_MAX;
 						
@@ -433,7 +472,32 @@ public final class RequestEnchantItem extends L2GameClientPacket
 				}
 				
 			}
-			else if (crystalScroll)
+			else if (LegendScroll)
+				{
+					
+					for (final int legendscroll : LEGENDS_SCROLLS)
+					{
+						if (scroll.getItemId() == legendscroll)
+						{
+							if (item.getEnchantLevel() >= Config.LEGEND_ENCHANT_LEVEL.size()) // the hash has size equals to
+																									// max enchant, so if the actual
+																									// enchant level is equal or more then max
+																									// then the enchant rate is equal to last
+																									// enchant rate
+							{
+								chance = Config.LEGEND_ENCHANT_LEVEL.get(Config.LEGEND_ENCHANT_LEVEL.size());
+							}
+							else
+							{
+								chance = Config.LEGEND_ENCHANT_LEVEL.get(item.getEnchantLevel() + 1);
+							}
+							maxEnchantLevel = Config.ENCHANT_WEAPON_MAX;
+							
+							break;
+						}
+					}
+					
+			}else if (crystalScroll)
 			{
 				
 				for (final int crystalarmorscroll : CRYSTAL_ARMOR_SCROLLS)
@@ -504,7 +568,32 @@ public final class RequestEnchantItem extends L2GameClientPacket
 				}
 				
 			}
-			else if (crystalScroll)
+			else if (LegendScroll)
+				{
+					
+					for (final int legendscroll : LEGENDS_SCROLLS)
+					{
+						if (scroll.getItemId() == legendscroll)
+						{
+							if (item.getEnchantLevel() >= Config.LEGEND_ENCHANT_LEVEL.size()) // the hash has size equals to
+																									// max enchant, so if the actual
+																									// enchant level is equal or more then max
+																									// then the enchant rate is equal to last
+																									// enchant rate
+							{
+								chance = Config.LEGEND_ENCHANT_LEVEL.get(Config.LEGEND_ENCHANT_LEVEL.size());
+							}
+							else
+							{
+								chance = Config.LEGEND_ENCHANT_LEVEL.get(item.getEnchantLevel() + 1);
+							}
+							maxEnchantLevel = Config.ENCHANT_WEAPON_MAX;
+							
+							break;
+						}
+					}
+					
+				}else if (crystalScroll)
 			{
 				
 				for (final int crystaljewelscroll : CRYSTAL_ARMOR_SCROLLS)
@@ -627,7 +716,11 @@ public final class RequestEnchantItem extends L2GameClientPacket
 			}
 			else
 			{
-				if (crystalScroll)
+				if (LegendScroll)
+				{
+					sm = SystemMessage.sendString("Legend Scroll fallo. ");
+					activeChar.sendPacket(sm);
+				}else if (crystalScroll)
 				{
 					sm = SystemMessage.sendString("Failed in Crystal Enchant. The enchant value of the item become " + Config.CRYSTAL_ENCHANT_MIN);
 					activeChar.sendPacket(sm);
@@ -654,7 +747,7 @@ public final class RequestEnchantItem extends L2GameClientPacket
 					}
 				}
 				
-				if (!blessedScroll && !crystalScroll)
+				if (!blessedScroll && !crystalScroll && !LegendScroll)
 				{
 					if (item.getEnchantLevel() > 0)
 					{
@@ -743,6 +836,9 @@ public final class RequestEnchantItem extends L2GameClientPacket
 					{
 						item.setEnchantLevel(Config.BREAK_ENCHANT);
 						item.updateDatabase();
+					}else if (LegendScroll)
+					{
+						
 					}
 					else if (crystalScroll)
 					{
