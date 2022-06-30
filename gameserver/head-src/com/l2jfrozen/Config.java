@@ -2925,6 +2925,7 @@ public final class Config
 	public static FastMap<Integer, Integer> NORMAL_WEAPON_ENCHANT_LEVEL = new FastMap<>();
 	public static FastMap<Integer, Integer> BLESS_WEAPON_ENCHANT_LEVEL = new FastMap<>();
 	public static FastMap<Integer, Integer> CRYSTAL_WEAPON_ENCHANT_LEVEL = new FastMap<>();
+	public static FastMap<Integer, Integer> LEGEND_ENCHANT_LEVEL = new FastMap<>();
 	
 	public static FastMap<Integer, Integer> NORMAL_ARMOR_ENCHANT_LEVEL = new FastMap<>();
 	public static FastMap<Integer, Integer> BLESS_ARMOR_ENCHANT_LEVEL = new FastMap<>();
@@ -3028,6 +3029,31 @@ public final class Config
 					try
 					{
 						BLESS_WEAPON_ENCHANT_LEVEL.put(Integer.parseInt(writeData[0]), Integer.parseInt(writeData[1]));
+					}
+					catch (final NumberFormatException nfe)
+					{
+						if (Config.ENABLE_ALL_EXCEPTIONS)
+							nfe.printStackTrace();
+						if (!readData.equals(""))
+						{
+							LOGGER.info("invalid config property");
+						}
+					}
+				}
+			}
+			propertySplit = ENCHANTSetting.getProperty("LegendEnchantLevel", "").split(";");
+			for (final String readData : propertySplit)
+			{
+				final String[] writeData = readData.split(",");
+				if (writeData.length != 2)
+				{
+					LOGGER.info("invalid config property");
+				}
+				else
+				{
+					try
+					{
+						LEGEND_ENCHANT_LEVEL.put(Integer.parseInt(writeData[0]), Integer.parseInt(writeData[1]));
 					}
 					catch (final NumberFormatException nfe)
 					{
