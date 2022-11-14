@@ -127,7 +127,6 @@ public class EnterWorld extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		
-		activeChar.sendMessage("******Chalo Es un boludo.***********");
 		
 		if (activeChar == null)
 		{
