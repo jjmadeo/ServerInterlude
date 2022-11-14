@@ -179,6 +179,7 @@ public abstract class L2Skill
 		HEAL,
 		HOT,
 		BALANCE_LIFE,
+		PARTY_RESCUDE,
 		HEAL_PERCENT,
 		HEAL_STATIC,
 		COMBATPOINTHEAL,

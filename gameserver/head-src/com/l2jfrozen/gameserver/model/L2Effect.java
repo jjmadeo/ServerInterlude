@@ -84,6 +84,7 @@ public abstract class L2Effect
 		SALVATION,
 		SILENT_MOVE,
 		HIDE,
+		PARTY_RESCUDE,
 		SIGNET_EFFECT,
 		SIGNET_GROUND,
 		SEED,

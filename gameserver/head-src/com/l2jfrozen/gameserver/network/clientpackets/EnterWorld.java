@@ -98,6 +98,7 @@ import com.l2jfrozen.gameserver.powerpak.PowerPakConfig;
 import com.l2jfrozen.gameserver.thread.TaskPriority;
 import com.l2jfrozen.gameserver.thread.ThreadPoolManager;
 import com.l2jfrozen.gameserver.util.Util;
+import com.l2jfrozen.util.PushNotificationManagerImpl;
 
 /**
  * Enter World Packet Handler
@@ -125,6 +126,8 @@ public class EnterWorld extends L2GameClientPacket
 	protected void runImpl()
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
+		
+		activeChar.sendMessage("******Chalo Es un boludo.***********");
 		
 		if (activeChar == null)
 		{
@@ -281,14 +284,18 @@ public class EnterWorld extends L2GameClientPacket
 		// Welcome to Lineage II
 		sendPacket(new SystemMessage(SystemMessageId.WELCOME_TO_LINEAGE));
 		
+		PushNotificationManagerImpl.sendMessagePush(activeChar.getAccountName(), null, "Login", "Te avisamos que acabas de ingresar con tu Personaje @"+activeChar.getName());
+		
 		// Credits to L2jfrozen
-		activeChar.sendMessage("This server uses L2JFrozen, a project founded by L2Chef and");
-		activeChar.sendMessage("developed by the L2JFrozen Dev Team at l2jfrozen.com");
+//		activeChar.sendMessage("This server uses L2JFrozen, a project founded by L2Chef and");
+//		activeChar.sendMessage("developed by the L2JFrozen Dev Team at l2jfrozen.com");
+		
+		
 		
 		SevenSigns.getInstance().sendCurrentPeriodMsg(activeChar);
 		Announcements.getInstance().showAnnouncements(activeChar);
 		
-		loadTutorial(activeChar);
+		//loadTutorial(activeChar);
 		
 		// Check for crowns
 		CrownManager.getInstance().checkCrowns(activeChar);

@@ -1,0 +1,9 @@
+/bin/
+<<<<<<< Updated upstream
+=======
+/build/
+/config/
+/data/
+/dist/
+/lib/
+>>>>>>> Stashed changes

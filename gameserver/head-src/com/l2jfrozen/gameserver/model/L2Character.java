@@ -7008,6 +7008,9 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	 */
 	protected void onHitTimer(final L2Character target, int damage, final boolean crit, final boolean miss, final boolean soulshot, final boolean shld)
 	{
+		
+		LOGGER.info("charName: "+target.getName()+" Damage: "+damage);
+		
 		// If the attacker/target is dead or use fake death, notify the AI with EVT_CANCEL
 		// and send a Server->Client packet ActionFailed (if attacker is a L2PcInstance)
 		if (target == null || isAlikeDead() || this instanceof L2NpcInstance && ((L2NpcInstance) this).isEventMob)

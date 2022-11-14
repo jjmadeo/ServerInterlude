@@ -45,6 +45,7 @@ import com.l2jfrozen.gameserver.templates.StatsSet;
 import com.l2jfrozen.gameserver.thread.ThreadPoolManager;
 import com.l2jfrozen.logs.Log;
 import com.l2jfrozen.util.CloseUtil;
+import com.l2jfrozen.util.PushNotificationManagerImpl;
 import com.l2jfrozen.util.database.DatabaseUtils;
 import com.l2jfrozen.util.database.L2DatabaseFactory;
 import com.l2jfrozen.util.random.Rnd;
@@ -189,6 +190,7 @@ public class RaidBossSpawnManager
 				info = null;
 				
 				GmListTable.broadcastMessageToGMs("Spawning Raid Boss " + raidboss.getName());
+				PushNotificationManagerImpl.sendMessagePushAllAccouns(null, "RaidBoss Spawn", "Raid Boss @"+raidboss.getName()+" Esta Vivo!!");
 				if (Config.ANNOUNCE_TO_ALL_SPAWN_RB)
 				{
 					Announcements.getInstance().announceToAll("Raid boss " + raidboss.getName() + " spawned in world.");
