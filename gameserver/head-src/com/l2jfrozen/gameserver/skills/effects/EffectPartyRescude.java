@@ -50,17 +50,32 @@ class EffectPartyRescude extends L2Effect
 	@Override
 	public void onStart()
 	{
-		log.info("Efector:"+getEffector().getName());
-		log.info("Efected:"+getEffected().getName());
-
-		
+//		log.info("Valor OnStartActual:"+getEffected().isCaptureDamage());
+//		
+//		getEffected().setCaptureDamage(true);
+//		
+//		log.info("Valor OnStartDespuesDel Set:"+getEffected().isCaptureDamage());
+//		
 	}
 	
 	@Override
 	public boolean onActionTime()
 	{
-		
-		
+//		int sumdamages = 0;
+//		int i = 0;
+//		for (int damage : getEffected().getDamageListIneffect())
+//		{
+//			i++;
+//			sumdamages += damage;
+//		}
+//		
+//		log.info("DamageSumado:"+sumdamages + "Recorder"+i);
+//		log.info("Efected:"+getEffected().getName());
+//		
+//		
+//		log.info("Efector:"+getEffector().getName());
+//		log.info("Efected:"+getEffected().getName());
+//		
 		// Commented. But I'm not really sure about this, could cause some bugs.
 		// getEffected().setIsInvul(false);
 		return false;
@@ -69,6 +84,11 @@ class EffectPartyRescude extends L2Effect
 	@Override
 	public void onExit()
 	{
+//		log.info("Valor OnExitActual:"+getEffected().isCaptureDamage());
+		
+//		getEffected().setCaptureDamage(false);
+		
+//		log.info("Valor OnExitDespuesDel Set:"+getEffected().isCaptureDamage());
 		
 	}
 	

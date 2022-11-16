@@ -20,7 +20,10 @@
 package com.l2jfrozen.gameserver.model.actor.status;
 
 import com.l2jfrozen.Config;
+import com.l2jfrozen.gameserver.ai.CtrlIntention;
 import com.l2jfrozen.gameserver.model.L2Character;
+import com.l2jfrozen.gameserver.model.L2Effect;
+import com.l2jfrozen.gameserver.model.L2Party;
 import com.l2jfrozen.gameserver.model.L2Summon;
 import com.l2jfrozen.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
@@ -55,6 +58,7 @@ public class PcStatus extends PlayableStatus
 	@Override
 	public final void reduceHp(double value, final L2Character attacker, final boolean awake)
 	{
+		LOGGER.info("Ingrese a PC status y  reduceHP");
 		if (getActiveChar().isInvul() && getActiveChar() != attacker)
 			return;
 		
@@ -133,6 +137,8 @@ public class PcStatus extends PlayableStatus
 			summon = null;
 		}
 		
+		value += TransferDamageToPartyRescude((int) value,attacker,awake);
+		
 		super.reduceHp(value, attacker, awake);
 		
 		if (!getActiveChar().isDead() && getActiveChar().isSitting())
@@ -199,4 +205,193 @@ public class PcStatus extends PlayableStatus
 	{
 		return (L2PcInstance) super.getActiveChar();
 	}
+	
+	protected int TransferDamageToPartyRescude(int value, final L2Character attacker, final boolean awake) {
+		
+		L2Character activeChar = getActiveChar(); 
+		L2Party party = null;
+		
+		if(activeChar.getParty()==null) 
+			return 0;
+		
+		party = activeChar.getParty();
+		
+		int cantidadMiembros =party.getMemberCount();
+		L2Character effectorSkill = null;
+		
+		for (L2Effect effect : getActiveChar().getAllEffects())
+		{
+			
+			if(effect.getEffectType().equals(L2Effect.EffectType.PARTY_RESCUDE)) {				
+				effectorSkill= effect.getEffector();
+				break;
+			}
+			
+		}
+		LOGGER.info("nameActiveChar="+getActiveChar().getName());
+		if(effectorSkill==null)
+			return 0;
+		
+		LOGGER.info("NameEffectorToBalanceDamage="+effectorSkill.getName());
+		int fullValue = (int) value;
+		
+		if (attacker != null && attacker != getActiveChar())
+		{
+			// Check and calculate transfered damage
+			//L2Summon summon = getActiveChar().getPet();
+			
+			// TODO correct range
+			if (effectorSkill != null && effectorSkill instanceof L2PcInstance && Util.checkIfInRange(1200, getActiveChar(), effectorSkill, true))
+			{
+				int tDmg = (int) value * 70 / 100;
+				LOGGER.info("DamageInflingido="+value);
+				LOGGER.info("damagetransferer="+tDmg);
+
+				
+				// Only transfer dmg up to current HP, it should not be killed
+				
+				if (effectorSkill.getCurrentCp() >= tDmg)
+				{
+					effectorSkill.setCurrentCp(effectorSkill.getCurrentCp() - tDmg); // Set Cp to diff of Cp vs value
+					tDmg = 0; // No need to subtract anything from Hp
+				}
+				else
+				{
+					tDmg -= effectorSkill.getCurrentCp(); // Get diff from value vs Cp; will apply diff to Hp
+					effectorSkill.setCurrentCp(0); // Set Cp to 0
+				}
+				
+				
+				if (effectorSkill.getCurrentHp() < tDmg)
+				{
+					tDmg = (int) effectorSkill.getCurrentHp() - 1;
+				}
+				
+				if (tDmg > 0)
+				{
+					LOGGER.info("RedujeHP="+tDmg);
+
+					effectorSkill.reduceCurrentHp(tDmg, attacker);
+					value -= tDmg;
+					fullValue = (int) value; // reduce the annouced value here as player will get a message about summon dammage
+				}
+			}
+			
+			if (attacker instanceof L2PlayableInstance/* || attacker instanceof L2SiegeGuardInstance */)
+			{
+				if (getCurrentCp() >= value)
+				{
+					setCurrentCp(getCurrentCp() - value); // Set Cp to diff of Cp vs value
+					value = 0; // No need to subtract anything from Hp
+				}
+				else
+				{
+					value -= getCurrentCp(); // Get diff from value vs Cp; will apply diff to Hp
+					setCurrentCp(0); // Set Cp to 0
+				}
+			}
+			
+			
+			
+			SystemMessage smsg = new SystemMessage(SystemMessageId.S1_GAVE_YOU_S2_DMG);
+			smsg.addString("Party Rescude:"+attacker.getName());
+			smsg.addNumber(fullValue);
+			//getActiveChar().sendPacket(smsg);
+			effectorSkill.sendPacket(smsg);
+			effectorSkill = null;
+			smsg = null;
+		}
+		
+		
+	
+		
+		return value;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+//		for (final L2Character targ : party.getPartyMembers())
+//		{
+//			final L2PcInstance player = (L2PcInstance) targ;
+//			
+//			if(player.equals(activeChar))
+//				continue;
+//			
+//			// L2PcInstance player = (L2PcInstance)target;
+//			if (!player.isInvul())
+//			{
+//				// Check and calculate transfered damage
+//				final L2Character charPP = player.getPet();
+//				if (charPP instanceof L2SummonInstance && Util.checkIfInRange(900, player, charPP, true))
+//				{
+//					int tDmg = (int) damage * (int) player.getStat().calcStat(Stats.TRANSFER_DAMAGE_PERCENT, 0, null, null) / 100;
+//					
+//					// Only transfer dmg up to current HP, it should
+//					// not be killed
+//					if (charPP.getCurrentHp() < tDmg)
+//						tDmg = (int) charPP.getCurrentHp() - 1;
+//					if (tDmg > 0)
+//					{
+//						charPP.reduceCurrentHp(tDmg, activeChar);
+//						damage -= tDmg;
+//					}
+//				}
+//				if (damage >= player.getCurrentHp())
+//				{
+//					if (player.isInDuel())
+//						player.setCurrentHp(1);
+//					else
+//					{
+//						player.setCurrentHp(0);
+//						if (player.isInOlympiadMode())
+//						{
+//							player.abortAttack();
+//							player.abortCast();
+//							player.getStatus().stopHpMpRegeneration();
+//							// player.setIsDead(true);
+//							player.setIsPendingRevive(true);
+//							if (player.getPet() != null)
+//								player.getPet().getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, null);
+//						}
+//						else
+//							player.doDie(activeChar);
+//					}
+//				}
+//				else
+//					player.setCurrentHp(player.getCurrentHp() - damage);
+//			}
+//			final SystemMessage smsg = new SystemMessage(SystemMessageId.S1_GAVE_YOU_S2_DMG);
+//			smsg.addString(activeChar.getName());
+//			smsg.addNumber((int) damage);
+//			player.sendPacket(smsg);
+//			
+//			
+//		} 
+		
+		
+	}
+	
 }

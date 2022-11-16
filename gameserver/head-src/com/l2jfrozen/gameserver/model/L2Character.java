@@ -23,6 +23,7 @@ package com.l2jfrozen.gameserver.model;
 import static com.l2jfrozen.gameserver.ai.CtrlIntention.AI_INTENTION_ATTACK;
 import static com.l2jfrozen.gameserver.ai.CtrlIntention.AI_INTENTION_FOLLOW;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +35,7 @@ import javolution.util.FastMap;
 import javolution.util.FastTable;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.util.log.Log;
 
 import com.l2jfrozen.Config;
 import com.l2jfrozen.gameserver.ai.CtrlEvent;
@@ -306,7 +308,13 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	private boolean _meditated;
 	
 	private boolean _InZonaPVP = false;
-
+	
+	/**
+	 * este mod es para el party rescude*/
+	
+	/** The _attack by list. */
+	private List<Integer> damageListIneffect;
+	private boolean captureDamage;
 	
 	/**
 	 * Zone system<br>
@@ -442,6 +450,10 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 		_template = template;
 		
 		_triggeredSkills = new FastMap<>();
+		
+		captureDamage= false;
+		damageListIneffect = new ArrayList<Integer>();
+		
 		
 		if (template != null && this instanceof L2NpcInstance)
 		{
@@ -7009,7 +7021,25 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	protected void onHitTimer(final L2Character target, int damage, final boolean crit, final boolean miss, final boolean soulshot, final boolean shld)
 	{
 		
-		//LOGGER.info("charName: "+target.getName()+" Damage: "+damage);
+//		boolean effecto = false;
+//		
+//		for (L2Effect effect : target.getAllEffects())
+//		{
+//			LOGGER.info("SKILL TYPE:"+effect.getEffectType().toString());
+//			if(effect.getEffectType().equals(L2Effect.EffectType.PARTY_RESCUDE)) {				
+//				effecto= true;
+//				break;
+//			}
+//			
+//		}
+//		
+//		if(effecto) {
+//			target.adddamageListIneffect(damage);
+//			LOGGER.info("charName: "+target.getName()+" Damage: "+damage);
+//		}
+		
+		
+		
 		
 		// If the attacker/target is dead or use fake death, notify the AI with EVT_CANCEL
 		// and send a Server->Client packet ActionFailed (if attacker is a L2PcInstance)
@@ -11053,4 +11083,37 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	{
 		this._InZonaPVP = _InZonaPVP;
 	}
+	
+	/**
+	 * @return the captureDamage
+	 */
+	public boolean isCaptureDamage()
+	{
+		return captureDamage;
+	}
+
+	/**
+	 * @param captureDamage the captureDamage to set
+	 */
+	public void setCaptureDamage(boolean captureDamage)
+	{
+		this.captureDamage = captureDamage;
+	}
+
+	/**
+	 * @return the damageListIneffect
+	 */
+	public List<Integer> getDamageListIneffect()
+	{
+		return damageListIneffect;
+	}	
+	
+	public void adddamageListIneffect(int damage)
+	{
+		this.damageListIneffect.add(damage);
+	}
+	
+	
+	
 }
+
