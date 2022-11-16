@@ -46,7 +46,7 @@ import com.l2jfrozen.gameserver.handler.skillhandlers.Heal;
 import com.l2jfrozen.gameserver.handler.skillhandlers.ManaHeal;
 import com.l2jfrozen.gameserver.handler.skillhandlers.Manadam;
 import com.l2jfrozen.gameserver.handler.skillhandlers.Mdam;
-import com.l2jfrozen.gameserver.handler.skillhandlers.PartyRescude;
+
 import com.l2jfrozen.gameserver.handler.skillhandlers.Pdam;
 import com.l2jfrozen.gameserver.handler.skillhandlers.Recall;
 import com.l2jfrozen.gameserver.handler.skillhandlers.Resurrect;
@@ -98,7 +98,6 @@ public class SkillHandler
 		registerSkillHandler(new CombatPointHeal());
 		registerSkillHandler(new ManaHeal());
 		registerSkillHandler(new BalanceLife());
-		registerSkillHandler(new PartyRescude());
 		registerSkillHandler(new Charge());
 		registerSkillHandler(new ClanGate());
 		registerSkillHandler(new Continuous());
