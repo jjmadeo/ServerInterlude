@@ -17,24 +17,45 @@
 package com.l2jfrozen.gameserver.network.clientpackets;
 
 import java.nio.BufferUnderflowException;
+import java.util.Iterator;
+
+import org.apache.log4j.Logger;
 
 import com.l2jfrozen.Config;
 import com.l2jfrozen.gameserver.ai.CtrlIntention;
+import com.l2jfrozen.gameserver.datatables.sql.NpcTable;
+import com.l2jfrozen.gameserver.datatables.sql.SpawnTable;
+import com.l2jfrozen.gameserver.model.L2CommandChannel;
+import com.l2jfrozen.gameserver.model.L2Party;
+import com.l2jfrozen.gameserver.model.L2Radar;
+import com.l2jfrozen.gameserver.model.L2Summon;
+import com.l2jfrozen.gameserver.model.Location;
+import com.l2jfrozen.gameserver.model.L2Radar.RadarOnPlayer;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
+import com.l2jfrozen.gameserver.model.actor.instance.L2PetInstance;
 import com.l2jfrozen.gameserver.model.actor.position.L2CharPosition;
+import com.l2jfrozen.gameserver.model.spawn.L2Spawn;
 import com.l2jfrozen.gameserver.network.SystemMessageId;
 import com.l2jfrozen.gameserver.network.serverpackets.ActionFailed;
 import com.l2jfrozen.gameserver.network.serverpackets.EnchantResult;
+import com.l2jfrozen.gameserver.network.serverpackets.MagicSkillUser;
+import com.l2jfrozen.gameserver.network.serverpackets.RadarControl;
 import com.l2jfrozen.gameserver.network.serverpackets.StopMove;
+import com.l2jfrozen.gameserver.templates.L2NpcTemplate;
 import com.l2jfrozen.gameserver.thread.TaskPriority;
+import com.l2jfrozen.gameserver.thread.ThreadPoolManager;
 import com.l2jfrozen.gameserver.util.IllegalPlayerAction;
 import com.l2jfrozen.gameserver.util.Util;
+import com.l2jfrozen.util.random.Rnd;
 
 @SuppressWarnings("unused")
 public class MoveBackwardToLocation extends L2GameClientPacket
 {
+	private static final Logger LOGGER = Logger.getLogger(MoveBackwardToLocation.class);
+
 	private int _targetX, _targetY, _targetZ, _originX, _originY, _originZ, _moveMovement;
 	private int _curX, _curY, _curZ; // for geodata
+	private L2Spawn _npcSpawn;
 		
 	public TaskPriority getPriority()
 	{
@@ -113,6 +134,14 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 			return;
 		}
 		
+		activeChar.setLocDestino(_targetX, _targetY, _targetZ);
+		
+		if(activeChar.getPlocCaptureLocation()) {
+			plocGoLoc(activeChar,activeChar.getLocDestino());
+			activeChar.setPlocCaptureLocation(false);
+		}
+		
+
 		/*
 		 * // Correcting targetZ from floor level to head level (?) // Client is giving floor level as targetZ but that floor level doesn't // match our current geodata and teleport coords as good as head level! // L2J uses floor, not head level as char coordinates. This is some // sort of
 		 * incompatibility fix. // Validate position packets sends head level. _targetZ += activeChar.getTemplate().collisionHeight;
@@ -162,4 +191,61 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 	{
 		return "[C] 01 MoveBackwardToLoc";
 	}
+	
+	
+	
+	public static void plocGoLoc(final L2PcInstance active, Location loc)	{
+		
+		L2Party pp = active.getParty();		
+		L2CommandChannel cc = null;
+		if(pp==null)
+			return;
+		
+		 //cc = pp.getCommandChannel();
+		
+//		if(cc == null) {
+		if(true) {
+			
+			if(!pp.getLeader().equals(active) )
+				return;
+			
+			for (L2PcInstance pm : pp.getPartyMembers())
+			{	
+				pm.sendPacket(new RadarControl(0, 1, loc.getX(), loc.getY(), loc.getZ()));	
+				
+			}
+			
+			
+			
+		}
+//		else {
+//			
+//			if(!cc.getChannelLeader().equals(active) && !pp.getLeader().equals(active) )
+//				return;
+//			
+//			for (L2Party pm : cc.getPartys())
+//			{	
+//				for (L2PcInstance pmcc : pm.getPartyMembers())
+//				{	
+//					pmcc.sendPacket(new RadarControl(0, 1, loc.getX(), loc.getY(), loc.getZ()));	
+//					
+//				}	
+//				
+//			}
+//			
+//			
+//		}
+			
+			
+		
+		
+		
+		
+		
+		
+						
+					
+		
+	}
+	
 }

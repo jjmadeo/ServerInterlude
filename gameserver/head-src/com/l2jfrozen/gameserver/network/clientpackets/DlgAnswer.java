@@ -41,6 +41,10 @@ public final class DlgAnswer extends L2GameClientPacket
 	@Override
 	public void runImpl()
 	{
+		
+		LOGGER.info("RespuestaConfig"+_answer);
+		LOGGER.info("RespuestaMensajeID"+_messageId);
+		LOGGER.info("RespuestaRequestID"+_requestId);
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
 			return;

@@ -20,9 +20,12 @@
  */
 package com.l2jfrozen.gameserver.handler.skillhandlers;
 
+import org.apache.log4j.Logger;
+
 import com.l2jfrozen.Config;
 import com.l2jfrozen.gameserver.handler.ISkillHandler;
 import com.l2jfrozen.gameserver.handler.SkillHandler;
+import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.PartyLeader;
 import com.l2jfrozen.gameserver.managers.GrandBossManager;
 import com.l2jfrozen.gameserver.model.L2Character;
 import com.l2jfrozen.gameserver.model.L2Object;
@@ -91,6 +94,7 @@ public class Heal implements ISkillHandler
 		
 		for (final L2Object target2 : targets)
 		{
+			
 			target = (L2Character) target2;
 			
 			if (target == null || target.isDead() || target.isInvul())

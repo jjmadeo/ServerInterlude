@@ -36,6 +36,7 @@ import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.FarmPvpCmd;
 import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.Inventario;
 import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.OfflineShop;
 import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.Online;
+import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.PartyLeader;
 import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.StatsCmd;
 import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.TvTCmd;
 import com.l2jfrozen.gameserver.handler.voicedcommandhandlers.VersionCmd;
@@ -70,6 +71,7 @@ public class VoicedCommandHandler
 		
 		registerVoicedCommandHandler(new Voting());
 		registerVoicedCommandHandler(new Inventario());
+		registerVoicedCommandHandler(new PartyLeader());
 		
 		if (Config.BANKING_SYSTEM_ENABLED)
 		{

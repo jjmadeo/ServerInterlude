@@ -115,4 +115,18 @@ public final class Location
 			return true;
 		return false;
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{	
+		StringBuilder sb = new StringBuilder();
+		
+		return sb
+				.append("Cordenada x:").append(this._x)
+				.append("Cordenada y:").append(this._y)
+				.append("Cordenada z:").append(this._z).toString();
+	}
 }

@@ -306,6 +306,25 @@ public final class L2PcInstance extends L2PlayableInstance
 	/** The TOGGLE_USE time. */
 	protected long TOGGLE_USE = 0;
 	
+	private Location locDestino= null;
+	
+	public Location getLocDestino() {
+		return this.locDestino;
+	}
+	public void setLocDestino(int x,int y,int z) {
+		this.locDestino = new Location(x, y, z);
+	}
+	
+	public boolean plocCaptureLocation = false;
+	
+	
+	public boolean getPlocCaptureLocation() {
+		return this.plocCaptureLocation;
+	}
+	public void setPlocCaptureLocation(boolean a) {
+		 this.plocCaptureLocation = a;
+	}
+	
 	/**
 	 * Gets the actual status.
 	 * @return the actual status
@@ -15910,11 +15929,13 @@ public final class L2PcInstance extends L2PlayableInstance
 	 */
 	public void teleportAnswer(final int answer, final int requesterId)
 	{
+		LOGGER.info("teleportAnswer:");
 		if (_summonRequest.getTarget() == null)
 			return;
 		if (answer == 1 && _summonRequest.getTarget().getObjectId() == requesterId)
 		{
 			teleToTarget(this, _summonRequest.getTarget(), _summonRequest.getSkill());
+			LOGGER.info("teleportAnswer:"+_summonRequest.getTarget().getName());
 		}
 		_summonRequest.setTarget(null, null);
 	}
@@ -15927,31 +15948,60 @@ public final class L2PcInstance extends L2PlayableInstance
 	 */
 	public static void teleToTarget(final L2PcInstance targetChar, final L2PcInstance summonerChar, final L2Skill summonSkill)
 	{
-		if (targetChar == null || summonerChar == null || summonSkill == null)
+		LOGGER.info("teleToTarget:");
+		if (targetChar == null || summonerChar == null )
 			return;
+		
+		LOGGER.info("teleToTarget: Post Valids");
 		
 		if (!checkSummonerStatus(summonerChar))
 			return;
 		if (!checkSummonTargetStatus(targetChar, summonerChar))
 			return;
 		
-		final int itemConsumeId = summonSkill.getTargetConsumeId();
-		final int itemConsumeCount = summonSkill.getTargetConsume();
-		if (itemConsumeId != 0 && itemConsumeCount != 0)
-		{
-			// Delete by rocknow
-			if (targetChar.getInventory().getInventoryItemCount(itemConsumeId, 0) < itemConsumeCount)
+		
+		
+		if( summonSkill == null) {
+			
+			final int itemConsumeId = 9522;
+			final int itemConsumeCount = 25;
+			if (itemConsumeId != 0 && itemConsumeCount != 0)
 			{
-				final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S1_REQUIRED_FOR_SUMMONING);
+				// Delete by rocknow
+				if (targetChar.getInventory().getInventoryItemCount(itemConsumeId, 0) < itemConsumeCount)
+				{
+					final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S1_REQUIRED_FOR_SUMMONING);
+					sm.addItemName(itemConsumeId);
+					targetChar.sendPacket(sm);
+					return;
+				}
+				targetChar.getInventory().destroyItemByItemId("Consume", itemConsumeId, itemConsumeCount, summonerChar, targetChar);
+				final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S1_DISAPPEARED);
+				sm.addItemName(itemConsumeId);
+				targetChar.sendPacket(sm);
+			}
+			
+			
+		}else {
+			final int itemConsumeId = summonSkill.getTargetConsumeId();
+			final int itemConsumeCount = summonSkill.getTargetConsume();
+			if (itemConsumeId != 0 && itemConsumeCount != 0)
+			{
+				// Delete by rocknow
+				if (targetChar.getInventory().getInventoryItemCount(itemConsumeId, 0) < itemConsumeCount)
+				{
+					final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S1_REQUIRED_FOR_SUMMONING);
+					sm.addItemName(summonSkill.getTargetConsumeId());
+					targetChar.sendPacket(sm);
+					return;
+				}
+				targetChar.getInventory().destroyItemByItemId("Consume", itemConsumeId, itemConsumeCount, summonerChar, targetChar);
+				final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S1_DISAPPEARED);
 				sm.addItemName(summonSkill.getTargetConsumeId());
 				targetChar.sendPacket(sm);
-				return;
 			}
-			targetChar.getInventory().destroyItemByItemId("Consume", itemConsumeId, itemConsumeCount, summonerChar, targetChar);
-			final SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S1_DISAPPEARED);
-			sm.addItemName(summonSkill.getTargetConsumeId());
-			targetChar.sendPacket(sm);
 		}
+		
 		targetChar.teleToLocation(summonerChar.getX(), summonerChar.getY(), summonerChar.getZ(), true);
 	}
 	
