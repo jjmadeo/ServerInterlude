@@ -29,10 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastTable;
-
 import org.apache.log4j.Logger;
 
 import com.l2jfrozen.Config;
@@ -142,6 +138,11 @@ import com.l2jfrozen.gameserver.util.Util;
 import com.l2jfrozen.util.Point3D;
 import com.l2jfrozen.util.random.Rnd;
 
+import Dev.Tournament.properties.ArenaConfig;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import javolution.util.FastTable;
+
 /**
  * Mother class of all character objects of the world (PC, NPC...)<BR>
  * <BR>
@@ -166,6 +167,10 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	// Data Field
 	/** The attack stance. */
 	private long attackStance;
+	
+	public static final int ARENA_EVENT = 21;
+	public static final int TOURNAMENT = 22;
+
 	
 	/** The _attack by list. */
 	private List<L2Character> _attackByList;
@@ -2290,7 +2295,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 					if (Config.CTF_REMOVE_BUFFS_ON_DIE)
 						stopAllEffects();
 				}
-				else if (Config.LEAVE_BUFFS_ON_DIE) // this means that the player is not in event
+				else if (Config.LEAVE_BUFFS_ON_DIE ||  (isArenaAttack() && (isArena9x9() || (isArena5x5() && ArenaConfig.ALLOW_5X5_LOSTBUFF)))) // this means that the player is not in event
 				{
 					stopAllEffects();
 				}
@@ -2839,7 +2844,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	 */
 	public boolean isMovementDisabled()
 	{
-		return isImmobileUntilAttacked() || isStunned() || isRooted() || isSleeping() || isOverloaded() || isParalyzed() || isImobilised() || isFakeDeath() || isFallsdown();
+		return isImmobileUntilAttacked() || isStunned() || isRooted() || isStopArena() || isSleeping() || isOverloaded() || isParalyzed() || isImobilised() || isFakeDeath() || isFallsdown();
 	}
 	
 	/**
@@ -10998,6 +11003,174 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	public void setIsAttackDisabled(final boolean value)
 	{
 		_isAttackDisabled = value;
+	}
+	
+	//--------------
+	// Tournament
+	//--------------
+	
+	private boolean _ArenaProtection;
+	
+	public void setArenaProtection(boolean comm)
+	{
+		_ArenaProtection = comm;
+	}
+	
+	public boolean isArenaProtection()
+	{
+		return _ArenaProtection;
+	}
+	
+	private boolean inArenaEvent = false;
+	
+	public void setInArenaEvent(boolean val)
+	{
+		inArenaEvent = val;
+	}
+	
+	public boolean isInArenaEvent()
+	{
+		return inArenaEvent;
+	}
+	
+	private boolean _ArenaAttack;
+	
+	public void setArenaAttack(boolean comm)
+	{
+		_ArenaAttack = comm;
+	}
+	
+	public boolean isArenaAttack()
+	{
+		return _ArenaAttack;
+	}
+	
+	private boolean _Arena1x1;
+	
+	public void setArena1x1(boolean comm)
+	{
+		_Arena1x1 = comm;
+	}
+	
+	public boolean isArena1x1()
+	{
+		return _Arena1x1;
+	}
+	
+	private boolean _Arena3x3;
+	
+	public void setArena3x3(boolean comm)
+	{
+		_Arena3x3 = comm;
+	}
+	
+	public boolean isArena3x3()
+	{
+		return _Arena3x3;
+	}
+	
+	private boolean _Arena5x5;
+	
+	public void setArena5x5(boolean comm)
+	{
+		_Arena5x5 = comm;
+	}
+	
+	public boolean isArena5x5()
+	{
+		return _Arena5x5;
+	}
+	
+	private boolean _Arena9x9;
+	
+	public void setArena9x9(boolean comm)
+	{
+		_Arena9x9 = comm;
+	}
+	
+	public boolean isArena9x9()
+	{
+		return _Arena9x9;
+	}
+	private boolean _ArenaObserv;
+	
+	public void setArenaObserv(boolean comm)
+	{
+		_ArenaObserv = comm;
+	}
+	
+	public boolean isArenaObserv()
+	{
+		return _ArenaObserv;
+	}
+	private boolean _isStopMov = false;
+	public boolean isStopArena()
+	{
+		return _isStopMov;
+	}
+	//---------
+	
+	public int _originalTitleColorTournament = 0;
+	public String _originalTitleTournament;
+	
+	private boolean _TournamentTeleport;
+	
+	public void setTournamentTeleport(boolean comm)
+	{
+		_TournamentTeleport = comm;
+	}
+	
+	public boolean isTournamentTeleport()
+	{
+		return _TournamentTeleport;
+	}
+	
+	public int duelist_cont = 0,
+		dreadnought_cont = 0,
+		tanker_cont = 0, 
+		dagger_cont = 0, 
+		archer_cont = 0, 
+		bs_cont = 0, 
+		archmage_cont = 0,
+		soultaker_cont = 0, 
+		mysticMuse_cont = 0,
+		stormScreamer_cont = 0,
+		titan_cont = 0,
+		dominator_cont = 0,
+		grandKhauatari_cont = 0,
+		doomcryer_cont = 0;
+	
+	public int duelist_cont_tournament = 0, 
+		dreadnought_cont_tournament = 0, 
+		tanker_cont_tournament = 0, 
+		dagger_cont_tournament = 0, 
+		archer_cont_tournament = 0, 
+		bs_cont_tournament = 0,
+		archmage_cont_tournament = 0, 
+		soultaker_cont_tournament = 0, 
+		mysticMuse_cont_tournament = 0,
+		stormScreamer_cont_tournament = 0, 
+		titan_cont_tournament = 0, 
+		dominator_cont_tournament = 0;
+	
+	
+	private boolean _OlympiadProtection;
+	
+	public int _player_n = 1;
+	
+	public void setOlympiadProtection(boolean comm)
+	{
+		_OlympiadProtection = comm;
+	}
+	
+	public boolean isOlympiadProtection()
+	{
+		return _OlympiadProtection;
+	}
+	
+	public void setStopArena(boolean value)
+	{
+		_isStopMov = value;
 	}
 	
 	/*

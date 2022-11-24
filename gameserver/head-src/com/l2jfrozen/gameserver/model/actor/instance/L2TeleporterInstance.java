@@ -37,6 +37,8 @@ import com.l2jfrozen.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2jfrozen.gameserver.network.serverpackets.SystemMessage;
 import com.l2jfrozen.gameserver.templates.L2NpcTemplate;
 
+import Dev.Tournament.properties.ArenaTask;
+
 /**
  * The Class L2TeleporterInstance.
  * @author NightMarez
@@ -82,6 +84,16 @@ public final class L2TeleporterInstance extends L2FolkInstance
 			player.sendMessage("You are not allowed to use a teleport while registered in olympiad game.");
 			return;
 		}
+		
+		if (player.isArenaProtection())
+		{
+			if (!ArenaTask.is_started())
+				player.setArenaProtection(false);
+			else
+				player.sendMessage("Remove your participation from the Tournament event!");
+			return;
+		}
+
 		
 		if (player.isAio() && !Config.ALLOW_AIO_USE_GK)
 		{

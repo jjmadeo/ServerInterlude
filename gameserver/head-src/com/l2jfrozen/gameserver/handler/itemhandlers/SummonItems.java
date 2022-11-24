@@ -27,6 +27,7 @@ import com.l2jfrozen.gameserver.datatables.csv.SummonItemsData;
 import com.l2jfrozen.gameserver.datatables.sql.NpcTable;
 import com.l2jfrozen.gameserver.handler.IItemHandler;
 import com.l2jfrozen.gameserver.idfactory.IdFactory;
+import com.l2jfrozen.gameserver.model.L2Character;
 import com.l2jfrozen.gameserver.model.L2Skill;
 import com.l2jfrozen.gameserver.model.L2SummonItem;
 import com.l2jfrozen.gameserver.model.L2World;
@@ -63,6 +64,13 @@ public class SummonItems implements IItemHandler
 			playable.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
+		if (activeChar.isArenaProtection() && activeChar.isInsideZone(L2Character.TOURNAMENT))
+		{
+			activeChar.sendMessage("You can not do this in Tournament Event");
+			return;
+		}
+
 		
 		// if(activeChar._inEventTvT && TvT._started && !Config.TVT_ALLOW_SUMMON)
 		if (activeChar._inEventTvT && TvT.is_started() && !Config.TVT_ALLOW_SUMMON)

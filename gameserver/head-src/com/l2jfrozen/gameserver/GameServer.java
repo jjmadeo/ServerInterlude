@@ -155,6 +155,10 @@ import com.l2jfrozen.util.Memory;
 import com.l2jfrozen.util.Util;
 import com.l2jfrozen.util.database.L2DatabaseFactory;
 
+import Dev.Tournament.properties.ArenaConfig;
+import Dev.Tournament.properties.ArenaEvent;
+import Dev.Tournament.properties.ArenaTask;
+
 public class GameServer
 {
 	private static Logger LOGGER = Logger.getLogger("Loader");
@@ -573,6 +577,20 @@ public class GameServer
 		}
 		else
 			LOGGER.info("All events are Disabled.");
+		
+		
+				ArenaConfig.init();
+				if (ArenaConfig.TOURNAMENT_EVENT_TIME)
+				{
+					LOGGER.info("Tournament Event is enabled.");
+					ArenaEvent.getInstance().StartCalculationOfNextEventTime();
+				}
+				else if (ArenaConfig.TOURNAMENT_EVENT_START)
+				{
+					LOGGER.info("Tournament Event is enabled.");
+					ArenaTask.spawnNpc1();
+					ArenaTask.spawnNpc2();
+				}
 		
 		if ((Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE) && Config.RESTORE_OFFLINERS)
 			OfflineTradeTable.restoreOfflineTraders();

@@ -23,9 +23,9 @@ package com.l2jfrozen.gameserver.handler.usercommandhandlers;
 import com.l2jfrozen.Config;
 import com.l2jfrozen.gameserver.ai.CtrlIntention;
 import com.l2jfrozen.gameserver.controllers.GameTimeController;
-import com.l2jfrozen.gameserver.datatables.csv.MapRegionTable;
 import com.l2jfrozen.gameserver.handler.IUserCommandHandler;
 import com.l2jfrozen.gameserver.managers.GrandBossManager;
+import com.l2jfrozen.gameserver.model.L2Character;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jfrozen.gameserver.model.entity.event.CTF;
 import com.l2jfrozen.gameserver.model.entity.event.DM;
@@ -66,6 +66,13 @@ public class Escape implements IUserCommandHandler
 			return false;
 		}
 		
+		
+		if (activeChar.isArenaProtection() && activeChar.isInsideZone(L2Character.TOURNAMENT))
+		{
+			activeChar.sendMessage("You cannot use this skill in Tournament Event/Zone.");
+			return false;
+		}
+
 		// Check to see if the current player is in TVT Event.
 		if (activeChar._inEventTvT && TvT.is_started())
 		{

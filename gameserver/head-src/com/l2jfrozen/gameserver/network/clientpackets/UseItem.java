@@ -49,6 +49,8 @@ import com.l2jfrozen.gameserver.templates.L2Weapon;
 import com.l2jfrozen.gameserver.templates.L2WeaponType;
 import com.l2jfrozen.gameserver.util.Util;
 
+import Dev.Tournament.properties.ArenaConfig;
+
 public final class UseItem extends L2GameClientPacket
 {
 	private static Logger LOGGER = Logger.getLogger(UseItem.class);
@@ -282,6 +284,17 @@ public final class UseItem extends L2GameClientPacket
 		{
 			LOGGER.debug(activeChar.getObjectId() + ": use item " + _objectId);
 		}
+		
+		if (activeChar.isInArenaEvent() || activeChar.isArenaProtection())
+		{
+			if (ArenaConfig.TOURNAMENT_LISTID_RESTRICT.contains(item.getItemId()))
+			{
+				activeChar.sendMessage("You can not use this item during Tournament Event.");
+				activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+				return;
+			}
+		}
+
 		
 		if (item.isEquipable())
 		{

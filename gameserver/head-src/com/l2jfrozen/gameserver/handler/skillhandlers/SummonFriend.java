@@ -65,6 +65,13 @@ public class SummonFriend implements ISkillHandler
 			return;
 		}
 		
+		if (activeChar.isArenaProtection() && activeChar.isInsideZone(L2Character.TOURNAMENT))
+		{
+			activePlayer.sendMessage("You cannot use this skill in Tournament Event.");
+			return;
+		}
+
+		
 		if (activePlayer._inEvent)
 		{
 			activePlayer.sendMessage("You cannot use this skill in Event.");

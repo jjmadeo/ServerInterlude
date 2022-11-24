@@ -160,6 +160,12 @@ public final class Say2 extends L2GameClientPacket
 				return;
 			}
 		}
+		if (activeChar.isInArenaEvent() && !activeChar.isArenaAttack())
+		{
+			activeChar.sendMessage("Wait for the battle to begin..");
+			return;
+		}
+
 		
 		if (!getClient().getFloodProtectors().getSayAction().tryPerformAction("Say2"))
 		{

@@ -45,6 +45,9 @@ import com.l2jfrozen.gameserver.model.entity.olympiad.Olympiad;
 import com.l2jfrozen.gameserver.network.serverpackets.ActionFailed;
 import com.l2jfrozen.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2jfrozen.gameserver.util.GMAudit;
+import com.l2jfrozen.util.random.Rnd;
+
+import Dev.Tournament.properties.ArenaConfig;
 
 public final class RequestBypassToServer extends L2GameClientPacket
 {
@@ -175,6 +178,17 @@ public final class RequestBypassToServer extends L2GameClientPacket
 							activeChar.sendMessage("The event is already started. You can not leave now!");
 						}
 					}
+					else if (_command.startsWith("tele_tournament"))
+					{
+						if (activeChar.isOlympiadProtection())
+						{
+							activeChar.sendMessage("Are you participating in the Olympiad..");
+							return;
+						}
+						activeChar.teleToLocation(ArenaConfig.Tournament_locx + Rnd.get(-100, 100), ArenaConfig.Tournament_locy + Rnd.get(-100, 100), ArenaConfig.Tournament_locz);
+						activeChar.setTournamentTeleport(true);
+					}
+
 					
 					else if (_command.substring(endOfId + 1).startsWith("dmevent_player_join"))
 					{

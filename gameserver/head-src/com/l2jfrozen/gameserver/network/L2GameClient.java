@@ -31,8 +31,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javolution.util.FastList;
-
 import org.apache.log4j.Logger;
 
 import com.l2jfrozen.Config;
@@ -70,6 +68,9 @@ import com.l2jfrozen.util.CloseUtil;
 import com.l2jfrozen.util.OlympiadLogger;
 import com.l2jfrozen.util.database.DatabaseUtils;
 import com.l2jfrozen.util.database.L2DatabaseFactory;
+
+import Dev.Tournament.properties.ArenaTask;
+import javolution.util.FastList;
 
 /**
  * @author L2JFrozen dev
@@ -785,6 +786,19 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 				final L2PcInstance player = L2GameClient.this.getActiveChar();
 				if (player != null) // this should only happen on connection loss
 				{
+					
+					if (player.isArenaProtection())
+					{
+						player.setXYZ(ArenaTask.loc1x(), ArenaTask.loc1y(), ArenaTask.loc1z());
+						if (player.isInArenaEvent())
+						{
+							player.getAppearance().setTitleColor(player._originalTitleColorTournament);
+							player.setTitle(player._originalTitleTournament);
+							player.broadcastUserInfo();
+							player.broadcastTitleInfo();
+						}
+					}
+					
 					if (Config.ENABLE_OLYMPIAD_DISCONNECTION_DEBUG)
 					{
 						if (player.isInOlympiadMode() || player.inObserverMode())
@@ -798,6 +812,11 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 							{
 								final String text = "Player " + player.getName() + ", Class:" + player.getClassId() + ", Level:" + player.getLevel() + ", Mode: Observer, Loc: " + player.getX() + " Y:" + player.getY() + " Z:" + player.getZ() + ", Critical?: " + _forcedToClose;
 								OlympiadLogger.add(text, "Olympiad_crash_debug");
+							}
+							if (player.isInArenaEvent())
+							{
+								//player.increaseArenaDefeats();
+								player.setXYZ(82698, 148638, -3473);
 							}
 							else
 							{
@@ -914,6 +933,20 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 				L2PcInstance player = L2GameClient.this.getActiveChar();
 				if (player != null) // this should only happen on connection loss
 				{
+					
+					if (player.isArenaProtection())
+					{
+						player.setXYZ(ArenaTask.loc1x(), ArenaTask.loc1y(), ArenaTask.loc1z());
+						if (player.isInArenaEvent())
+						{
+							player.getAppearance().setTitleColor(player._originalTitleColorTournament);
+							player.setTitle(player._originalTitleTournament);
+							player.broadcastUserInfo();
+							player.broadcastTitleInfo();
+						}
+					}
+
+					
 					// Olympiad crash DEBUG
 					if (Config.ENABLE_OLYMPIAD_DISCONNECTION_DEBUG)
 					{

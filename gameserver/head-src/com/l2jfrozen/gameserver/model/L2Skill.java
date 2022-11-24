@@ -1588,7 +1588,7 @@ public abstract class L2Skill
 				}
 				
 				// Check for null target or any other invalid target
-				if (target == null || target.isDead() || target == activeChar && !canTargetSelf)
+				if (target == null || target.isDead() || (target == activeChar && !canTargetSelf)|| ((activeChar instanceof L2PcInstance) && !activeChar.isInArenaEvent() && target.isInArenaEvent()))
 				{
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_INCORRECT));
 					return null;

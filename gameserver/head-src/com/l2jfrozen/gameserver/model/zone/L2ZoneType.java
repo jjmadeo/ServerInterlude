@@ -372,7 +372,7 @@ public abstract class L2ZoneType
 		
 		for (final L2Character character : _characterList.values())
 		{
-			if (character instanceof L2PcInstance)
+			if (character instanceof L2PcInstance && !(((L2PcInstance) character).isInsideZone(L2Character.TOURNAMENT) && !((L2PcInstance) character).inObserverMode()) && !((L2PcInstance) character).isArenaProtection() && !((L2PcInstance) character).isArenaObserv())
 				character.sendPacket(packet);
 		}
 	}
