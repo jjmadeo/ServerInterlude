@@ -168,86 +168,86 @@ public class L2ServiceInstance extends L2NpcInstance
 			player.broadcastUserInfo();
 			
 		}
-		// else if (command.startsWith("active"))
-		// {
-		// showActiveWindow(player, 0);
-		// }
-		// else if (command.startsWith("passive"))
-		// {
-		// showPassiveWindow(player, 0);
-		// }
-		// else if (command.startsWith("back"))
-		// {
-		// showChatWindow(player, 0);
-		// }
-		// else if (command.startsWith("Refresh"))
-		// {
-		// addAugment(player, 16287, 3202, 3);
-		// }
-		// else if (command.startsWith("Ritual"))
-		// {
-		// addAugment(player, 16183, 3130, 10);
-		// }
-		// else if (command.startsWith("Heal"))
-		// {
-		// addAugment(player, 16195, 3123, 10);
-		// }
-		// else if (command.startsWith("Recharge"))
-		// {
-		// addAugment(player, 16204, 3127, 10);
-		// }
-		// else if (command.startsWith("Cheer"))
-		// {
-		// addAugment(player, 16197, 3131, 10);
-		// }
-		// else if (command.startsWith("Celestial"))
-		// {
-		// addAugment(player, 15047, 3158, 1);
-		// }
-		// else if (command.startsWith("BlessedSoul"))
-		// {
-		// addAugment(player, 16200, 3128, 10);
-		// }
-		// else if (command.startsWith("BlessedBody"))
-		// {
-		// addAugment(player, 16199, 3124, 10);
-		// }
-		// else if (command.startsWith("Empower"))
-		// {
-		// addAugment(player, 16281, 3241, 10);
-		// }
-		// else if (command.startsWith("MagicBarrier"))
-		// {
-		// addAugment(player, 16282, 3245, 10);
-		// }
-		// else if (command.startsWith("Might"))
-		// {
-		// addAugment(player, 16283, 3240, 10);
-		// }
-		// else if (command.startsWith("Shield"))
-		// {
-		// addAugment(player, 16284, 3244, 10);
-		// }
-		// else if (command.startsWith("DuelMight"))
-		// {
-		// addAugment(player, 16285, 3243, 10);
-		// }
-		// else if (command.startsWith("Focus"))
-		// {
-		// addAugment(player, 16333, 3249, 10);
-		// }
-		// else if (command.startsWith("WildMagic"))
-		// {
-		// addAugment(player, 16336, 3250, 10);
-		// }
-		// else if (command.startsWith("Agility"))
-		// {
-		// addAugment(player, 16332, 3247, 10);
-		// }
-		// else if (command.startsWith("Guidance"))
-		// {
-		// addAugment(player, 16335, 3248, 10);
-		// }
+		 else if (command.startsWith("active"))
+		 {
+		 showActiveWindow(player, 0);
+		 }
+		 else if (command.startsWith("passive"))
+		 {
+		 showPassiveWindow(player, 0);
+		 }
+		 else if (command.startsWith("back"))
+		 {
+		 showChatWindow(player, 0);
+		 }
+		 else if (command.startsWith("Refresh"))
+		 {
+		 addAugment(player, 16287, 3202, 3);
+		 }
+		 else if (command.startsWith("Ritual"))
+		 {
+		 addAugment(player, 16183, 3130, 10);
+		 }
+		 else if (command.startsWith("Heal"))
+		 {
+		 addAugment(player, 16195, 3123, 10);
+		 }
+		 else if (command.startsWith("Recharge"))
+		 {
+		 addAugment(player, 16204, 3127, 10);
+		 }
+		 else if (command.startsWith("Cheer"))
+		 {
+		 addAugment(player, 16197, 3131, 10);
+		 }
+		 else if (command.startsWith("Celestial"))
+		 {
+		 addAugment(player, 15047, 3158, 1);
+		 }
+		 else if (command.startsWith("BlessedSoul"))
+		 {
+		 addAugment(player, 16200, 3128, 10);
+		 }
+		 else if (command.startsWith("BlessedBody"))
+		 {
+		 addAugment(player, 16199, 3124, 10);
+		 }
+		 else if (command.startsWith("Empower"))
+		 {
+		 addAugment(player, 16281, 3241, 10);
+		 }
+		 else if (command.startsWith("MagicBarrier"))
+		 {
+		 addAugment(player, 16282, 3245, 10);
+		 }
+		 else if (command.startsWith("Might"))
+		 {
+		 addAugment(player, 16283, 3240, 10);
+		 }
+		 else if (command.startsWith("Shield"))
+		 {
+		 addAugment(player, 16284, 3244, 10);
+		 }
+		 else if (command.startsWith("DuelMight"))
+		 {
+		 addAugment(player, 16285, 3243, 10);
+		 }
+		 else if (command.startsWith("Focus"))
+		 {
+		 addAugment(player, 16333, 3249, 10);
+		 }
+		 else if (command.startsWith("WildMagic"))
+		 {
+		 addAugment(player, 16336, 3250, 10);
+		 }
+		 else if (command.startsWith("Agility"))
+		 {
+		 addAugment(player, 16332, 3247, 10);
+		 }
+		 else if (command.startsWith("Guidance"))
+		 {
+		 addAugment(player, 16335, 3248, 10);
+		 }
 //		else if (command.startsWith("changeName2"))
 //		{
 //			showNameWindow(player, 0);
@@ -820,7 +820,7 @@ public class L2ServiceInstance extends L2NpcInstance
 	{
 		TextBuilder tb = new TextBuilder();
 		
-		tb.append("<html><head><title>Lineage II Addicted - Active Augment</title></head><body>");
+		tb.append("<html><head><title>Lineage II SOLO BETA - Active Augment</title></head><body>");
 		tb.append("<center><img src=\"l2ui_ch3.herotower_deco\" width=256 height=32>");
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
 		tb.append("</center>");
@@ -849,7 +849,7 @@ public class L2ServiceInstance extends L2NpcInstance
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
 		tb.append("<table border=0 bgcolor=000000 width=300 height=20>");
 		tb.append("<tr>");
-		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2addicted.eu</font></td>");
+		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> URL</font></td>");
 		tb.append("</tr>");
 		tb.append("</table>");
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
@@ -866,7 +866,7 @@ public class L2ServiceInstance extends L2NpcInstance
 	public void showPassiveWindow(L2PcInstance player, int val)
 	{
 		TextBuilder tb = new TextBuilder();
-		tb.append("<html><head><title>Lineage II Addicted - Passive Augment</title></head><body>");
+		tb.append("<html><head><title>Lineage II SOLO BETA - Passive Augment</title></head><body>");
 		tb.append("<center><img src=\"l2ui_ch3.herotower_deco\" width=256 height=32>");
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
 		tb.append("</center>");

@@ -414,6 +414,16 @@ public class Arena1x1 implements Runnable
 			}
 		}
 		
+		public void checkSummon(Pair pj)		
+		{
+		
+			if(pj.getLeader().getPet() != null) {
+				pj.getLeader().getPet().setArenaAttack(isAlive());
+			}
+			
+		}
+		
+		
 		public void sendPacket(String message, int duration)
 		{
 			if (leader != null && leader.isOnline() == 1)
@@ -506,8 +516,8 @@ public class Arena1x1 implements Runnable
 			pairTwo.teleportTo(pTwoX, pTwoY, pTwoZ);
 			pairOne.backTitle();
 			pairTwo.backTitle();
-			pairOne.setRealInstance();
-			pairTwo.setRealInstance();
+//			pairOne.setRealInstance();
+//			pairTwo.setRealInstance();
 			pairOne.setInTournamentEvent(false);
 			pairTwo.setInTournamentEvent(false);
 			pairOne.setArenaProtection(false);
@@ -556,8 +566,9 @@ public class Arena1x1 implements Runnable
 					arena.setFree(false);
 					pairOne.removePet();
 					pairTwo.removePet();
-					pairOne.setArenaInstance();
-					pairTwo.setArenaInstance();
+					//con esto activado en torunament no se puede 
+//					pairOne.setArenaInstance();
+//					pairTwo.setArenaInstance();
 					pairOne.teleportTo(arena.x - 850, arena.y, arena.z);
 					pairTwo.teleportTo(arena.x + 850, arena.y, arena.z);
 					pairOne.setImobilised(true);
