@@ -40,6 +40,8 @@ import com.l2jfrozen.gameserver.network.serverpackets.RestartResponse;
 import com.l2jfrozen.gameserver.network.serverpackets.SystemMessage;
 import com.l2jfrozen.gameserver.taskmanager.AttackStanceTaskManager;
 
+import Dev.Tournament.properties.ArenaTask;
+
 public final class RequestRestart extends L2GameClientPacket
 {
 	private static Logger LOGGER = Logger.getLogger(RequestRestart.class);
@@ -61,6 +63,14 @@ public final class RequestRestart extends L2GameClientPacket
 			LOGGER.warn("[RequestRestart] activeChar null!?");
 			return;
 		}
+		if ((player.isInArenaEvent() || player.isArenaProtection()) && ArenaTask.is_started())
+		{
+			player.sendMessage("You cannot restart while in Tournament Event!");
+			player.sendPacket(ActionFailed.STATIC_PACKET);
+			sendPacket(RestartResponse.valueOf(false));
+			return;
+		}
+
 		
 		// Check if player is enchanting
 		if (player.getActiveEnchantItem() != null)

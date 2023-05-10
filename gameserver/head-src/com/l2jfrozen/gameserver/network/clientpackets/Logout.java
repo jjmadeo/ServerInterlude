@@ -31,6 +31,8 @@ import com.l2jfrozen.gameserver.network.serverpackets.ActionFailed;
 import com.l2jfrozen.gameserver.network.serverpackets.SystemMessage;
 import com.l2jfrozen.gameserver.taskmanager.AttackStanceTaskManager;
 
+import Dev.Tournament.properties.ArenaTask;
+
 public final class Logout extends L2GameClientPacket
 {
 	private static Logger LOGGER = Logger.getLogger(Logout.class);
@@ -55,6 +57,14 @@ public final class Logout extends L2GameClientPacket
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
+		if ((player.isInArenaEvent() || player.isArenaProtection()) && ArenaTask.is_started())
+		{
+			player.sendMessage("You cannot logout while in Tournament Event!");
+			player.sendPacket(ActionFailed.STATIC_PACKET);
+			return;
+		}
+
 		
 		if (player.isAway())
 		{

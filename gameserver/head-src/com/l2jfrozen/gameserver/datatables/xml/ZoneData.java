@@ -26,8 +26,6 @@ import java.sql.ResultSet;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import javolution.util.FastList;
-
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -45,6 +43,7 @@ import com.l2jfrozen.gameserver.model.zone.L2ZoneType;
 import com.l2jfrozen.gameserver.model.zone.form.ZoneCuboid;
 import com.l2jfrozen.gameserver.model.zone.form.ZoneCylinder;
 import com.l2jfrozen.gameserver.model.zone.form.ZoneNPoly;
+import com.l2jfrozen.gameserver.model.zone.type.L2ArenaEventZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2ArenaZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2BigheadZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2BossZone;
@@ -67,11 +66,14 @@ import com.l2jfrozen.gameserver.model.zone.type.L2OlympiadStadiumZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2PeaceZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2PoisonZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2SwampZone;
+import com.l2jfrozen.gameserver.model.zone.type.L2TournamentZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2TownZone;
 import com.l2jfrozen.gameserver.model.zone.type.L2WaterZone;
 import com.l2jfrozen.util.CloseUtil;
 import com.l2jfrozen.util.database.DatabaseUtils;
 import com.l2jfrozen.util.database.L2DatabaseFactory;
+
+import javolution.util.FastList;
 
 /**
  * This class manages the augmentation data and can also create new augmentations.
@@ -272,6 +274,13 @@ public class ZoneData
 									case "FlagZone":
 										temp = new L2FlagZone(zoneId);
 										break;
+									case "ArenaEventZone":
+										temp = new L2ArenaEventZone(zoneId);
+										break;
+									case "TournamentZone":
+										temp = new L2TournamentZone(zoneId);
+										break;
+
 								}
 								
 								// Check for unknown type

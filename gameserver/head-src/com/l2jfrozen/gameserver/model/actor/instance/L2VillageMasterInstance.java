@@ -23,8 +23,6 @@ package com.l2jfrozen.gameserver.model.actor.instance;
 import java.util.Iterator;
 import java.util.Set;
 
-import javolution.text.TextBuilder;
-
 import com.l2jfrozen.Config;
 import com.l2jfrozen.gameserver.datatables.sql.CharTemplateTable;
 import com.l2jfrozen.gameserver.datatables.sql.ClanTable;
@@ -55,6 +53,9 @@ import com.l2jfrozen.gameserver.network.serverpackets.SystemMessage;
 import com.l2jfrozen.gameserver.network.serverpackets.UserInfo;
 import com.l2jfrozen.gameserver.templates.L2NpcTemplate;
 import com.l2jfrozen.gameserver.util.Util;
+
+import Dev.Tournament.properties.ArenaTask;
+import javolution.text.TextBuilder;
 
 /**
  * This class ...
@@ -96,6 +97,16 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 		{
 			cmdParams2 = commandStr[2];
 		}
+		
+		if (player.isArenaProtection())
+		{
+			if (!ArenaTask.is_started())
+				player.setArenaProtection(false);
+			else
+				player.sendMessage("Remove your participation from the Tournament Event!");
+			return;
+		}
+
 		
 		commandStr = null;
 		if (player.isAio() && !Config.ALLOW_AIO_USE_CM)

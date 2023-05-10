@@ -38,6 +38,7 @@ import com.l2jfrozen.Config;
 import com.l2jfrozen.gameserver.model.L2Character;
 import com.l2jfrozen.gameserver.model.L2World;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
+import com.l2jfrozen.gameserver.model.entity.Announcements;
 import com.l2jfrozen.gameserver.network.serverpackets.CharInfo;
 import com.l2jfrozen.gameserver.network.serverpackets.L2GameServerPacket;
 import com.l2jfrozen.gameserver.network.serverpackets.RelationChanged;
@@ -236,5 +237,14 @@ public final class Broadcast
 			
 			onlinePlayer.sendPacket(mov);
 		}
+	}
+
+	/**
+	 * @param string
+	 */
+	public static void gameAnnounceToOnlinePlayers(String string)
+	{
+		Announcements.getInstance().announceToAll(string);
+		
 	}
 }

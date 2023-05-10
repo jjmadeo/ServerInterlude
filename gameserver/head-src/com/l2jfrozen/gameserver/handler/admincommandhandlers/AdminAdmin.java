@@ -32,6 +32,8 @@ import com.l2jfrozen.gameserver.model.entity.olympiad.Olympiad;
 import com.l2jfrozen.gameserver.network.SystemMessageId;
 import com.l2jfrozen.gameserver.network.serverpackets.SystemMessage;
 
+import Dev.Tournament.properties.ArenaTask;
+
 /**
  * This class handles following admin commands: - admin|admin1/admin2/admin3/admin4/admin5 = slots for the 5 starting admin menus - gmliston/gmlistoff = includes/excludes active character from /gmlist results - silence = toggles private messages acceptance mode - diet = toggles weight penalty mode -
  * tradeoff = toggles trade acceptance mode - reload = reloads specified component from multisell|skill|npc|htm|item|instancemanager - set/set_menu/set_mod = alters specified server setting - saveolymp = saves olympiad state manually - manualhero = cycles olympiad and calculate new heroes.
@@ -58,7 +60,8 @@ public class AdminAdmin implements IAdminCommandHandler
 		"admin_set_menu",
 		"admin_set_mod",
 		"admin_saveolymp",
-		"admin_manualhero"
+		"admin_manualhero",
+		"admin_tourna"
 	};
 	
 	private enum CommandEnum
@@ -77,7 +80,8 @@ public class AdminAdmin implements IAdminCommandHandler
 		admin_set_menu,
 		admin_set_mod,
 		admin_saveolymp,
-		admin_manualhero
+		admin_manualhero,
+		admin_tourna
 	}
 	
 	@Override
@@ -98,7 +102,7 @@ public class AdminAdmin implements IAdminCommandHandler
 		switch (comm)
 		{
 			case admin_admin:
-			case admin_admin1:
+			case admin_admin1:				
 			case admin_admin2:
 			case admin_admin3:
 			case admin_admin4:
@@ -268,6 +272,16 @@ public class AdminAdmin implements IAdminCommandHandler
 				}
 				
 				st = null;
+				
+				return true;
+				 
+			case admin_tourna :
+				
+				if(ArenaTask._started) {
+						ArenaTask.finishEvent();						
+				}else {
+					ArenaTask.SpawnEvent();
+				}
 				
 				return true;
 				

@@ -44,10 +44,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javolution.text.TextBuilder;
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.apache.commons.lang.RandomStringUtils;
 
 import com.l2jfrozen.Config;
@@ -245,6 +241,11 @@ import com.l2jfrozen.util.Point3D;
 import com.l2jfrozen.util.database.DatabaseUtils;
 import com.l2jfrozen.util.database.L2DatabaseFactory;
 import com.l2jfrozen.util.random.Rnd;
+
+import Dev.Tournament.properties.ArenaConfig;
+import javolution.text.TextBuilder;
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 /**
  * This class represents all player characters in the world.<br>
@@ -620,6 +621,7 @@ public final class L2PcInstance extends L2PlayableInstance
 		@Override
 		public void doAttack(final L2Character target)
 		{
+			
 			if (isInsidePeaceZone(L2PcInstance.this, target))
 			{
 				sendPacket(ActionFailed.STATIC_PACKET);
@@ -640,6 +642,9 @@ public final class L2PcInstance extends L2PlayableInstance
 				sendPacket(ActionFailed.STATIC_PACKET);
 				return;
 			}
+			
+
+			
 			
 			super.doAttack(target);
 			
@@ -675,6 +680,31 @@ public final class L2PcInstance extends L2PlayableInstance
 				sendPacket(ActionFailed.STATIC_PACKET);
 				return;
 				
+			}
+			
+
+			if (isArenaProtection() && ((isArena5x5() && ArenaConfig.bs_COUNT_5X5 == 0) || isArena3x3()) && (skill.getSkillType() == SkillType.RESURRECT))
+			{
+				sendPacket(ActionFailed.STATIC_PACKET);
+				return;
+			}
+
+			if (isArenaProtection() && !isArena5x5() && !isArena9x9() && ArenaConfig.ARENA_SKILL_LIST.contains(skill.getId()))
+			{
+				sendPacket(ActionFailed.STATIC_PACKET);
+				return;
+			}
+
+			if (isArenaProtection() && ArenaConfig.ARENA_DISABLE_SKILL_LIST_PERM.contains(skill.getId()))
+			{
+				sendMessage("[Tournament]: Skill disabled in tournament.");
+				return;
+			}
+
+			if (isInArenaEvent() && !isArenaAttack() && ArenaConfig.ARENA_DISABLE_SKILL_LIST.contains(skill.getId()))
+			{
+				sendMessage("[Tournament]: Wait for the battle to begin");
+				return;
 			}
 			
 			// during teleport phase, players cant do any attack
@@ -11873,6 +11903,28 @@ public final class L2PcInstance extends L2PlayableInstance
 				return false;
 			}
 		}
+		
+		if (attacker.isInArenaEvent())
+		{
+			L2PcInstance player = null;
+			if (attacker instanceof L2PcInstance)
+			{
+				player = (L2PcInstance) attacker;
+			}
+			else if (attacker instanceof L2Summon)
+			{
+				player = ((L2Summon) attacker).getOwner();
+			}
+			if (player != null)
+			{
+				if (isArenaAttack() && player.isArenaAttack())
+					return true;
+				
+				return false;
+			}
+		}
+
+		
 		
 		if (L2Character.isInsidePeaceZone(attacker, this))
 		{

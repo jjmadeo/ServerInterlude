@@ -5637,6 +5637,28 @@ public final class Config
 		return true;
 	}
 	
+	
+	/**
+	 * Initialize {@link ExProperties} from specified configuration file.
+	 * @param filename : File name to be loaded.
+	 * @return ExProperties : Initialized {@link ExProperties}.
+	 */
+	public static final ExProperties initProperties(String filename)
+	{
+		final ExProperties result = new ExProperties();
+		
+		try
+		{
+			result.load(new File(filename));
+		}
+		catch (IOException e)
+		{
+			LOGGER.warn("Config: Error loading \"" + filename + "\" config.");
+		}
+		
+		return result;
+	}
+	
 	public static void saveHexid(final int serverId, final String string)
 	{
 		Config.saveHexid(serverId, string, HEXID_FILE);

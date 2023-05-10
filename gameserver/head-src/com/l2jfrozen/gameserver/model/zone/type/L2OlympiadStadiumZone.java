@@ -57,10 +57,15 @@ public class L2OlympiadStadiumZone extends L2ZoneType
 		
 		if (character instanceof L2PcInstance)
 		{
-			if ((((L2PcInstance) character).getOlympiadGameId() + 1) == getStadiumId())
-				((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
+//			if ((((L2PcInstance) character).getOlympiadGameId() + 1) == getStadiumId())
+//				((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
+			final L2PcInstance player = character.getActingPlayer();
+						
+			if (player.getOlympiadGameId() + 1 == getStadiumId() || player.isArenaProtection() || player.isGM())
+				player.sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
 			else
-				character.teleToLocation(TeleportWhereType.Town);
+				player.teleToLocation(TeleportWhereType.Town);
+//				character.teleToLocation(TeleportWhereType.Town);
 		}
 	}
 	
