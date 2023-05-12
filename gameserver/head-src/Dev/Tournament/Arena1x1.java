@@ -5,12 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.l2jfrozen.gameserver.model.*;
 import org.apache.log4j.Logger;
 
 import com.l2jfrozen.Config;
-import com.l2jfrozen.gameserver.model.L2Character;
-import com.l2jfrozen.gameserver.model.L2Effect;
-import com.l2jfrozen.gameserver.model.L2Summon;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PetInstance;
 import com.l2jfrozen.gameserver.model.base.ClassId;
@@ -470,6 +468,9 @@ public class Arena1x1 implements Runnable
 			free--;
 			pairOne.saveTitle();
 			pairTwo.saveTitle();
+			reloadCdSkills(pairOne.leader);
+			reloadCdSkills(pairTwo.leader);
+
 			portPairsToArena();
 			pairOne.inicarContagem(ArenaConfig.ARENA_WAIT_INTERVAL_1X1);
 			pairTwo.inicarContagem(ArenaConfig.ARENA_WAIT_INTERVAL_1X1);
@@ -482,8 +483,8 @@ public class Arena1x1 implements Runnable
 			}
 			pairOne.sendPacketinit("Started. Good Fight!", 3);
 			pairTwo.sendPacketinit("Started. Good Fight!", 3);
-			pairOne.EventTitle(ArenaConfig.MSG_TEAM1, ArenaConfig.TITLE_COLOR_TEAM1);
-			pairTwo.EventTitle(ArenaConfig.MSG_TEAM2, ArenaConfig.TITLE_COLOR_TEAM2);
+			/*pairOne.EventTitle(ArenaConfig.MSG_TEAM1, ArenaConfig.TITLE_COLOR_TEAM1);
+			pairTwo.EventTitle(ArenaConfig.MSG_TEAM2, ArenaConfig.TITLE_COLOR_TEAM2);*/
 			pairOne.setImobilised(false);
 			pairTwo.setImobilised(false);
 			pairOne.setArenaAttack(true);
@@ -514,6 +515,8 @@ public class Arena1x1 implements Runnable
 			pairTwo.revive();
 			pairOne.teleportTo(pOneX, pOneY, pOneZ);
 			pairTwo.teleportTo(pTwoX, pTwoY, pTwoZ);
+			reloadCdSkills(pairOne.leader);
+			reloadCdSkills(pairTwo.leader);
 			pairOne.backTitle();
 			pairTwo.backTitle();
 //			pairOne.setRealInstance();
@@ -694,6 +697,21 @@ public class Arena1x1 implements Runnable
 			}
 		}
 	}
+
+	private static void   reloadCdSkills(L2PcInstance p){
+		final L2Object target = p.getTarget();
+		L2PcInstance player = null;
+		if (target instanceof L2PcInstance) {
+			player = (L2PcInstance) target;
+
+			for (final L2Skill skill : player.getAllSkills())
+				if (skill.getId() != 1324)
+					player.enableSkill(skill);
+
+			player.updateEffectIcons();
+		}
+	}
+
 	
 	private static class SingletonHolder
 	{

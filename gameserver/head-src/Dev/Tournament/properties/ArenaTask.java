@@ -21,6 +21,8 @@ import Dev.Tournament.Arena3x3;
 import Dev.Tournament.Arena5x5;
 import Dev.Tournament.Arena9x9;
 
+import java.util.Arrays;
+
 public abstract class ArenaTask
 {
 	private static final Logger LOGGER = Logger.getLogger(ArenaTask.class);
@@ -52,18 +54,17 @@ public abstract class ArenaTask
 		_aborted = false;
 		_started = true;
 		
-		LOGGER.info("***TOURNA***");
-		LOGGER.info("***TOURNA 1x1***");
+
 		ThreadPoolManager.getInstance().scheduleGeneral(Arena1x1.getInstance(), 5000);
-		LOGGER.info("***TOURNA 3x3***");
+
 		ThreadPoolManager.getInstance().scheduleGeneral(Arena3x3.getInstance(), 5000);
-		LOGGER.info("***TOURNA 5x5***");
+
 		ThreadPoolManager.getInstance().scheduleGeneral(Arena5x5.getInstance(), 5000);
-		LOGGER.info("***TOURNA 9x9***");
+
 		ThreadPoolManager.getInstance().scheduleGeneral(Arena9x9.getInstance(), 5000);
 		
 		
-		LOGGER.info("***Esperando***");
+
 		
 		ThreadPoolManager.getInstance().scheduleGeneral(new Runnable()
 		{
@@ -255,12 +256,12 @@ public abstract class ArenaTask
 	 * Waiter.
 	 * @param interval the interval
 	 */
-	protected static void waiter(long interval)
+	/*protected static void waiter(long interval)
 	{
 		long startWaiterTime = System.currentTimeMillis();
 		int seconds = (int) (interval / 1000);
 		
-		LOGGER.info("***Waiter***");
+
 
 		while (startWaiterTime + interval > System.currentTimeMillis() && !_aborted)
 		{
@@ -317,6 +318,42 @@ public abstract class ArenaTask
 				catch (InterruptedException ie)
 				{
 				}
+			}
+		}
+	}*/
+
+	protected static void waiter(long interval) {
+		long startWaiterTime = System.currentTimeMillis();
+		int seconds = (int) (interval / 1000);
+
+		while (startWaiterTime + interval > System.currentTimeMillis() && !_aborted) {
+			seconds--;
+
+			if (_started) {
+				// Usamos un stream para iterar por las diferentes cantidades de tiempo restantes
+				int finalSeconds = seconds;
+				Arrays.asList(3600, 1800, 900, 600, 300, 240, 180, 120, 60, 30, 15, 10, 3, 2, 1)
+						.stream()
+						.filter(timeLeft -> finalSeconds == timeLeft)
+						.findFirst()
+						.ifPresent(timeLeft -> {
+							// Utilizamos una función lambda para hacer el anuncio correspondiente según la cantidad de tiempo restante
+							if (timeLeft >= 60) {
+								Broadcast.gameAnnounceToOnlinePlayers("Tournament: Party Event PvP");
+								Broadcast.gameAnnounceToOnlinePlayers("Tournament: Teleport in the GK to (Tournament) Zone");
+								Broadcast.gameAnnounceToOnlinePlayers("Tournament: Reward: " + ItemTable.getInstance().getTemplate(ArenaConfig.ARENA_REWARD_ID).getName());
+								Broadcast.gameAnnounceToOnlinePlayers("Tournament: " + timeLeft / 60 + " minute(s) till event finish!");
+							} else {
+								Broadcast.gameAnnounceToOnlinePlayers("Tournament: " + timeLeft + " second(s) till event finish!");
+							}
+						});
+			}
+
+			try {
+				// Esperamos 1 segundo antes de continuar
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}

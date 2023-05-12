@@ -11903,9 +11903,9 @@ public final class L2PcInstance extends L2PlayableInstance
 				return false;
 			}
 		}
-		
-		if (attacker.isInArenaEvent())
+		if (attacker != null && attacker.isInArenaEvent())
 		{
+			LOGGER.info("ataquer quien es "+attacker.getName());
 			L2PcInstance player = null;
 			if (attacker instanceof L2PcInstance)
 			{
