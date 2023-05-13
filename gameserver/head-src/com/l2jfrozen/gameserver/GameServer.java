@@ -29,6 +29,7 @@ import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.logging.LogManager;
 
+import com.l2jfrozen.gameserver.datatables.csv.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -49,15 +50,6 @@ import com.l2jfrozen.gameserver.datatables.HeroSkillTable;
 import com.l2jfrozen.gameserver.datatables.NobleSkillTable;
 import com.l2jfrozen.gameserver.datatables.OfflineTradeTable;
 import com.l2jfrozen.gameserver.datatables.SkillTable;
-import com.l2jfrozen.gameserver.datatables.csv.DoorTable;
-import com.l2jfrozen.gameserver.datatables.csv.ExtractableItemsData;
-import com.l2jfrozen.gameserver.datatables.csv.FishTable;
-import com.l2jfrozen.gameserver.datatables.csv.HennaTable;
-import com.l2jfrozen.gameserver.datatables.csv.MapRegionTable;
-import com.l2jfrozen.gameserver.datatables.csv.NpcWalkerRoutesTable;
-import com.l2jfrozen.gameserver.datatables.csv.RecipeTable;
-import com.l2jfrozen.gameserver.datatables.csv.StaticObjects;
-import com.l2jfrozen.gameserver.datatables.csv.SummonItemsData;
 import com.l2jfrozen.gameserver.datatables.sql.AccessLevels;
 import com.l2jfrozen.gameserver.datatables.sql.AdminCommandAccessRights;
 import com.l2jfrozen.gameserver.datatables.sql.ArmorSetsTable;
@@ -285,6 +277,7 @@ public class GameServer
 			CustomArmorSetsTable.getInstance();
 		}
 		ExtractableItemsData.getInstance();
+		ExtractablePacksItemsData.getInstance();
 		SummonItemsData.getInstance();
 		if (Config.ALLOWFISHING)
 			FishTable.getInstance();
