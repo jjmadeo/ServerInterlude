@@ -222,11 +222,11 @@ public class L2TournamentInstance extends L2FolkInstance
 				return;
 			}
 			
-			if (player.getClassId() == ClassId.shillenElder || player.getClassId() == ClassId.shillienSaint || player.getClassId() == ClassId.bishop || player.getClassId() == ClassId.cardinal || player.getClassId() == ClassId.elder || player.getClassId() == ClassId.evaSaint)
+			/*if (player.getClassId() == ClassId.shillenElder || player.getClassId() == ClassId.shillienSaint || player.getClassId() == ClassId.bishop || player.getClassId() == ClassId.cardinal || player.getClassId() == ClassId.elder || player.getClassId() == ClassId.evaSaint)
 			{
 				player.sendMessage("Yor class is not allowed in 1x1 game event.");
 				return;				
-			}
+			}*/
 			
 			if (Arena1x1.getInstance().register(player))
 			{
