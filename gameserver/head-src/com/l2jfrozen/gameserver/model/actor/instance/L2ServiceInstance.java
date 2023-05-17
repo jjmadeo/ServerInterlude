@@ -79,6 +79,12 @@ public class L2ServiceInstance extends L2NpcInstance
 	@Override
 	public void onBypassFeedback(L2PcInstance player, String command)
 	{
+		if (player.isArenaProtection()){
+			player.sendMessage("No puedes operar mientras estas anotado en el Torunament");
+			return;
+		}
+
+
 		Races races = null;
 		
 		if (player == null)

@@ -241,6 +241,8 @@ public class Arena1x1 implements Runnable
 		
 		public void teleportTo(int x, int y, int z)
 		{
+			leader.reloadSkills();
+			leader.reloadSkills();
 			if (leader != null && leader.isOnline() == 1)
 			{
 				//leader.getAppearance().setInvisible();
@@ -466,11 +468,10 @@ public class Arena1x1 implements Runnable
 		public void run()
 		{
 			free--;
+			/*pairTwo.getLeader().reloadSkills();
+			pairOne.getLeader().reloadSkills();*/
 			pairOne.saveTitle();
 			pairTwo.saveTitle();
-			reloadCdSkills(pairOne.leader);
-			reloadCdSkills(pairTwo.leader);
-
 			portPairsToArena();
 			pairOne.inicarContagem(ArenaConfig.ARENA_WAIT_INTERVAL_1X1);
 			pairTwo.inicarContagem(ArenaConfig.ARENA_WAIT_INTERVAL_1X1);
@@ -515,8 +516,6 @@ public class Arena1x1 implements Runnable
 			pairTwo.revive();
 			pairOne.teleportTo(pOneX, pOneY, pOneZ);
 			pairTwo.teleportTo(pTwoX, pTwoY, pTwoZ);
-			reloadCdSkills(pairOne.leader);
-			reloadCdSkills(pairTwo.leader);
 			pairOne.backTitle();
 			pairTwo.backTitle();
 //			pairOne.setRealInstance();
@@ -578,6 +577,8 @@ public class Arena1x1 implements Runnable
 					pairTwo.setImobilised(true);
 					pairOne.setInTournamentEvent(true);
 					pairTwo.setInTournamentEvent(true);
+					/*pairTwo.getLeader().reloadSkills();
+					pairOne.getLeader().reloadSkills();*/
 					pairOne.removeSkills();
 					pairTwo.removeSkills();
 					fights.put(this.arena.id, pairOne.getLeader().getName() + " vs " + pairTwo.getLeader().getName());
@@ -698,19 +699,7 @@ public class Arena1x1 implements Runnable
 		}
 	}
 
-	private static void   reloadCdSkills(L2PcInstance p){
-		final L2Object target = p.getTarget();
-		L2PcInstance player = null;
-		if (target instanceof L2PcInstance) {
-			player = (L2PcInstance) target;
 
-			for (final L2Skill skill : player.getAllSkills())
-				if (skill.getId() != 1324)
-					player.enableSkill(skill);
-
-			player.updateEffectIcons();
-		}
-	}
 
 	
 	private static class SingletonHolder

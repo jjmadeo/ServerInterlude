@@ -85,16 +85,16 @@ public class L2TopInstance extends L2NpcInstance
 		
 		LOGGER.info("Commando Bypass: "+command + "--Player :"+player.getName());
 
-		if (command.startsWith("tpvp"))
+		if (command.startsWith("tpvpGetReward"))
 		{
 
 		}
-		if (command.startsWith("tpk"))
+		if (command.startsWith("tpkGetReward"))
 		{
 
 		}
 		
-		if (command.startsWith("tclan"))
+		if (command.startsWith("tclanGetReward"))
 		{
 
 		}

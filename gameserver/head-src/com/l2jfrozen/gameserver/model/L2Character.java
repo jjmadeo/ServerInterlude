@@ -11225,4 +11225,17 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	{
 		this._InZonaPVP = _InZonaPVP;
 	}
+
+	public  void  reloadSkills(){
+
+		for (final L2Skill skill : this.getAllSkills()){
+			if (skill.getId() != 1324){
+				this.enableSkill(skill);
+			}
+		}
+		this.updateEffectIcons();
+
+	}
+
+
 }
