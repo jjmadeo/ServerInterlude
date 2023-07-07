@@ -325,7 +325,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 						}
 					}
 					break;
-				case 3: // Change/Cancel Subclass - Initial
+				/*case 3: // Change/Cancel Subclass - Initial
 					
 					content.append("Change Subclass:<br>Which of the following sub classes would you like to change?<br>");
 					int classIndex = 1;
@@ -340,7 +340,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 						classIndex++;
 					}
 					content.append("<br>If you change a sub class, you'll start at level 40 after the 2nd class transfer.");
-					break;
+					break;*/
 				case 4: // Add Subclass - Action (Subclass 4 x[x])
 					/*
 					 * If the character is less than level 75 on any of their previously chosen classes then disallow them to change to their most recently added sub-class choice.
