@@ -752,7 +752,7 @@ public class L2ServiceInstance extends L2NpcInstance
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
 		tb.append("<table bgcolor=000000 width=300 height=40>");
 		tb.append("<tr>");
-		tb.append("<td width=\"300\" align=\"center\"><font color=\"666666\">Welcome " + player.getName() + " in Lineage II</font><font color=\"FF9900\"> -Addicted-</font></td>");
+		tb.append("<td width=\"300\" align=\"center\"><font color=\"666666\">Welcome " + player.getName() + " in Lineage II</font><font color=\"FF9900\">-WarLegend-</font></td>");
 		tb.append("</tr>");
 		tb.append("</table>");
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
@@ -808,7 +808,7 @@ public class L2ServiceInstance extends L2NpcInstance
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
 		tb.append("<table border=0 bgcolor=000000 width=300 height=20>");
 		tb.append("<tr>");
-		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2addicted.eu</font></td>");
+		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2wlegend.com.ar</font></td>");
 		tb.append("</tr>");
 		tb.append("</table>");
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
@@ -902,7 +902,7 @@ public class L2ServiceInstance extends L2NpcInstance
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
 		tb.append("<table border=0 bgcolor=000000 width=300 height=20>");
 		tb.append("<tr>");
-		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2addicted.eu</font></td>");
+		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2wlegend.com.ar</font></td>");
 		tb.append("</tr>");
 		tb.append("</table>");
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
@@ -943,7 +943,7 @@ public class L2ServiceInstance extends L2NpcInstance
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
 		tb.append("<table border=0 bgcolor=000000 width=300 height=20>");
 		tb.append("<tr>");
-		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2addicted.eu</font></td>");
+		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2wlegend.com.ar</font></td>");
 		tb.append("</tr>");
 		tb.append("</table>");
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
@@ -983,7 +983,7 @@ public class L2ServiceInstance extends L2NpcInstance
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
 		tb.append("<table border=0 bgcolor=000000 width=300 height=20>");
 		tb.append("<tr>");
-		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2addicted.eu</font></td>");
+		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2wlegend.com.ar</font></td>");
 		tb.append("</tr>");
 		tb.append("</table>");
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
@@ -1023,7 +1023,7 @@ public class L2ServiceInstance extends L2NpcInstance
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
 		tb.append("<table border=0 bgcolor=000000 width=300 height=20>");
 		tb.append("<tr>");
-		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2addicted.eu</font></td>");
+		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2wlegend.com.ar</font></td>");
 		tb.append("</tr>");
 		tb.append("</table>");
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
@@ -1249,7 +1249,7 @@ public class L2ServiceInstance extends L2NpcInstance
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
 		tb.append("<table border=0 bgcolor=000000 width=300 height=20>");
 		tb.append("<tr>");
-		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2addicted.eu</font></td>");
+		tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> www.l2wlegend.com.ar</font></td>");
 		tb.append("</tr>");
 		tb.append("</table>");
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");

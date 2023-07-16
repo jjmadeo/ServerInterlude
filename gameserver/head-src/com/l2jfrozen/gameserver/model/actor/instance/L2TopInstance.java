@@ -251,8 +251,8 @@ public class L2TopInstance extends L2NpcInstance
 
 
 
-		String  pvp=" SELECT     f.char_name,     f.pvpkills,     COALESCE((SELECT c.clan_name FROM gameserver.clan_data as c WHERE c.clan_id = f.clanid), 'Sin Clan') as nombreClan FROM     gameserver.characters as f ORDER BY     pvpkills DESC LIMIT 3;";
-		String  pk="SELECT     f.char_name,     f.pkkills,     COALESCE((SELECT c.clan_name FROM gameserver.clan_data as c WHERE c.clan_id = f.clanid), 'Sin Clan') as nombreClan FROM     gameserver.characters as f ORDER BY     pkkills DESC LIMIT 3;";
+		String  pvp=" SELECT     f.char_name,     f.pvpkills,     COALESCE((SELECT c.clan_name FROM gameserver.clan_data as c WHERE c.clan_id = f.clanid), 'Sin Clan') as nombreClan FROM     gameserver.characters as f where accesslevel =0 ORDER BY     pvpkills DESC LIMIT 3;";
+		String  pk="SELECT     f.char_name,     f.pkkills,     COALESCE((SELECT c.clan_name FROM gameserver.clan_data as c WHERE c.clan_id = f.clanid), 'Sin Clan') as nombreClan FROM     gameserver.characters as f where accesslevel =0 ORDER BY     pkkills DESC LIMIT 3;";
 		String  clan=" SELECT     b.clan_name,     SUM(a.pvpkills) as Score FROM     gameserver.characters a,     gameserver.clan_data b WHERE      a.clanid = b.clan_id GROUP BY     b.clan_name ORDER BY     Score DESC LIMIT 3;";
 		String sql = "";
 		List<String> result = new ArrayList<>();

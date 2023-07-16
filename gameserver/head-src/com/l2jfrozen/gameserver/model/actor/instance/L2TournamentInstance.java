@@ -89,13 +89,63 @@ public class L2TournamentInstance extends L2FolkInstance
 	
 	public void showMessageWindow(L2PcInstance player)
 	{
+		TextBuilder tb = new TextBuilder();
+		if(Arena1x1.registered == null){
+
+			tb.append("<html><head><title>Lineage II - Tournament Panel</title></head><body>");
+			tb.append("<center><img src=\"l2ui_ch3.herotower_deco\" width=256 height=32>");
+			tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
+			tb.append("<table bgcolor=000000 width=300 height=40>");
+			tb.append("<tr>");
+			tb.append("<td width=\"300\" align=\"center\"><font color=\"666666\">Welcome " + player.getName() + " in Lineage II</font><font color=\"FF9900\"> -Legends-</font></td>");
+			tb.append("</tr>");
+			tb.append("</table>");
+			tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
+			tb.append("<br>");
+			tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
+			tb.append("</center>");
+			tb.append("<center>");
+			tb.append("<table bgcolor=000000 width=300 height=12>");
+			tb.append("<tr>");
+			tb.append("<td width=\"300\" align=\"center\"><font color=\"FF0000\">Torneo PvP</font></td>");
+			tb.append("</tr>");
+			tb.append("<tr>");
+			tb.append("<td width=\"300\" align=\"center\"><font color=\"666666\">Participa por Recompensas</font></td>");
+			tb.append("</tr>");
+			tb.append("</table>");
+			tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
+			tb.append("<br>");
+			tb.append("<center>");
+			tb.append("<table>");
+			tb.append("<tr><td align=center><font color=\"227093\"><a>El Torneo no esta activado, Solicita al Administrador, para que lo active.</a></font></td></tr>");
+			tb.append("</table>");
+			tb.append("<br>");
+			tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
+			tb.append("<table border=0 bgcolor=000000 width=300 height=20>");
+			tb.append("<tr>");
+			tb.append("<td align=\"center\" width=\"300\"><font color=\"666666\">Vote for us :</font><font color=\"FF5555\"> URL WEB</font></td>");
+			tb.append("</tr>");
+			tb.append("</table>");
+			tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
+			tb.append("</center>");
+			tb.append("</body></html>");
+
+			NpcHtmlMessage msg = new NpcHtmlMessage(this.getObjectId());
+			msg.setHtml(tb.toString());
+			msg.replace("%objectId%", String.valueOf(this.getObjectId()));
+
+			player.sendPacket(msg);
+
+			return;
+		}
+
 		int reg1x1 = Arena1x1.registered.size();
 		int reg3x3 = Arena3x3.registered.size();
 		int reg5x5 = Arena5x5.registered.size();
 		int reg9x9 = Arena9x9.registered.size();
 		
 	
-		TextBuilder tb = new TextBuilder();
+
 		tb.append("<html><head><title>Lineage II - Tournament Panel</title></head><body>");
 		tb.append("<center><img src=\"l2ui_ch3.herotower_deco\" width=256 height=32>");
 		tb.append("<img src=\"L2UI.SquareGray\" width=300 height=1>");
