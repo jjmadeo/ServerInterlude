@@ -2019,8 +2019,10 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 		 */
 		
 		// Like L2OFF after a skill the player must stop the movement, also with toggle
-		if (!skill.isPotion() && this instanceof L2PcInstance)
-			((L2PcInstance) this).stopMove(null);
+
+		//LO COMENTO JUAN para parar los toggles.
+		/*if (!skill.isPotion() && this instanceof L2PcInstance)
+			((L2PcInstance) this).stopMove(null);*/
 		
 		// Start the effect as long as the player is casting.
 		if (effectWhileCasting)
@@ -2030,7 +2032,9 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 		
 		// Send a Server->Client packet MagicSkillUser with target, displayId, level, skillTime, reuseDelay
 		// to the L2Character AND to all L2PcInstance in the _KnownPlayers of the L2Character
-		broadcastPacket(new MagicSkillUser(this, target, displayId, level, hitTime, reuseDelay));
+		//Cambio, se agrego el if por las potas de mana, para que no se paren al correr.
+		if(skill.getId()!=2005)
+			broadcastPacket(new MagicSkillUser(this, target, displayId, level, hitTime, reuseDelay));
 		
 		// Send a system message USE_S1 to the L2Character
 		if (activeChar instanceof L2PcInstance && magicId != 1312)
