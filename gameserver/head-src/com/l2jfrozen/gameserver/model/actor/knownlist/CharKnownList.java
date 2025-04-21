@@ -31,9 +31,12 @@ import com.l2jfrozen.gameserver.model.actor.instance.L2MonsterInstance;
 import com.l2jfrozen.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jfrozen.gameserver.util.Util;
+import org.apache.log4j.Logger;
 
 public class CharKnownList extends ObjectKnownList
 {
+	protected static final Logger LOGGER = Logger.getLogger(CharKnownList.class);
+
 	// =========================================================
 	// Data Field
 	private Map<Integer, L2PcInstance> _knownPlayers;
@@ -157,6 +160,9 @@ public class CharKnownList extends ObjectKnownList
 	
 	public Collection<L2Character> getKnownCharactersInRadius(final long radius)
 	{
+
+		LOGGER.info("Visibilidad mientras camino.");
+
 		final FastList<L2Character> result = new FastList<>();
 		
 		for (final L2Object obj : getKnownObjects().values())
@@ -209,6 +215,8 @@ public class CharKnownList extends ObjectKnownList
 	
 	public final Collection<L2PcInstance> getKnownPlayersInRadius(final long radius)
 	{
+
+		LOGGER.info("Visibilidad mientras camino. 111");
 		final FastList<L2PcInstance> result = new FastList<>();
 		
 		for (final L2PcInstance player : getKnownPlayers().values())

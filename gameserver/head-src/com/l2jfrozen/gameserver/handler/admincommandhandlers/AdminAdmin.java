@@ -22,6 +22,7 @@ package com.l2jfrozen.gameserver.handler.admincommandhandlers;
 
 import java.util.StringTokenizer;
 
+import Dev.event.mod.interfaces.InstanceManager;
 import org.apache.log4j.Logger;
 
 import com.l2jfrozen.Config;
@@ -62,6 +63,7 @@ public class AdminAdmin implements IAdminCommandHandler
 		"admin_saveolymp",
 		"admin_manualhero",
 		"admin_tourna"
+		/*"admin_create_instance"*/
 	};
 	
 	private enum CommandEnum
@@ -82,6 +84,7 @@ public class AdminAdmin implements IAdminCommandHandler
 		admin_saveolymp,
 		admin_manualhero,
 		admin_tourna
+		/*admin_create_instance*/
 	}
 	
 	@Override
@@ -284,6 +287,34 @@ public class AdminAdmin implements IAdminCommandHandler
 				}
 				
 				return true;
+
+			/*case admin_create_instance:
+
+				if (st.countTokens() < 2)
+				{
+					activeChar.sendMessage("Format: //createinstance <id> <templatefile>");
+				}
+				else
+				{
+					try
+					{
+						final int id = Integer.parseInt(st.nextToken());
+						if (InstanceManager.getInstance().createInstanceFromTemplate(id,"instance.xml") && id < 300000)
+						{
+							activeChar.sendMessage("Instance created");
+							return true;
+						}
+
+						activeChar.sendMessage("Cannot create instance");
+						return true;
+					}
+					catch (final Exception e)
+					{
+						activeChar.sendMessage("Error loading: " + st.nextToken());
+						return false;
+					}
+				}*/
+
 				
 			default:
 			{

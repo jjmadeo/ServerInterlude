@@ -119,7 +119,7 @@ public class ObjectKnownList
 	
 	// =========================================================
 	// Method - Private
-	private final void findCloseObjects()
+	/*private final void findCloseObjects()
 	{
 		final boolean isActiveObjectPlayable = getActiveObject() instanceof L2PlayableInstance;
 		
@@ -176,9 +176,72 @@ public class ObjectKnownList
 			
 			playables = null;
 		}
+	}*/
+
+	private final void findCloseObjects() {
+		final boolean isActiveObjectPlayable = getActiveObject() instanceof L2PlayableInstance;
+
+		if (isActiveObjectPlayable) {
+			Collection<L2Object> objects = L2World.getInstance().getVisibleObjects(getActiveObject());
+
+			if (objects == null)
+				return;
+
+			// Obtener la instancia del objeto activo
+			int activeInstanceID = getActiveObject().getInstanceId();
+
+			// Iterar sobre todos los objetos visibles cerca del L2Character
+			for (final L2Object object : objects) {
+				if (object == null) {
+					continue;
+				}
+
+				// Verificar si los objetos pertenecen a la misma instancia
+				if (object.getInstanceId() == activeInstanceID) {
+					// Intentar agregar el objeto a los objetos conocidos del objeto activo
+					// L2PlayableInstance ve todo
+					addKnownObject(object);
+
+					// Intentar agregar el objeto activo a los objetos conocidos del objeto
+					// Solo si el objeto es un L2Character y el objeto activo es un L2PlayableInstance
+					if (object instanceof L2Character) {
+						object.getKnownList().addKnownObject(getActiveObject());
+					}
+				}
+			}
+
+			objects = null;
+		} else {
+			Collection<L2PlayableInstance> playables = L2World.getInstance().getVisiblePlayable(getActiveObject());
+
+			if (playables == null)
+				return;
+
+			// Obtener la instancia del objeto activo
+			int activeInstanceID = getActiveObject().getInstanceId();
+
+			// Iterar sobre todos los objetos visibles cerca del L2Character
+			for (final L2Object playable : playables) {
+				if (playable == null) {
+					continue;
+				}
+
+				// Verificar si los objetos pertenecen a la misma instancia
+				if (playable.getInstanceId() == activeInstanceID) {
+					// Intentar agregar el objeto a los objetos conocidos del objeto activo
+					// L2Character solo necesita ver L2PcInstance y L2PlayableInstance visibles,
+					// cuando se mueven. Otros L2Character actualmente solo se conocen desde el área de aparición inicial.
+					// Posiblemente buscar en los valores de getDistanceToForgetObject antes de modificar este enfoque...
+					addKnownObject(playable);
+				}
+			}
+
+			playables = null;
+		}
 	}
-	
-	public final void forgetObjects()
+
+
+	/*public final void forgetObjects()
 	{
 		// Go through knownObjects
 		Collection<L2Object> knownObjects = getKnownObjects().values();
@@ -225,8 +288,51 @@ public class ObjectKnownList
 		}
 		
 		knownObjects = null;
+	}*/
+
+	public final void forgetObjects() {
+		// Iterar sobre knownObjects
+		Collection<L2Object> knownObjects = getKnownObjects().values();
+
+		if (knownObjects == null || knownObjects.size() == 0)
+			return;
+
+		// Obtener la instancia del objeto activo
+		int activeInstanceID = getActiveObject().getInstanceId();
+
+		for (final L2Object object : knownObjects) {
+			if (object == null) {
+				continue;
+			}
+
+			// Eliminar todos los objetos invisibles
+			// Eliminar todos los objetos demasiado lejos
+			if (!object.isVisible() || !Util.checkIfInRange(getDistanceToForgetObject(object), getActiveObject(), object, true)) {
+				// Verificar si el objeto pertenece a la misma instancia que el objeto activo
+				if (object.getInstanceId() == activeInstanceID) {
+					if (object instanceof L2BoatInstance && getActiveObject() instanceof L2PcInstance) {
+						if (((L2BoatInstance) object).getVehicleDeparture() == null) {
+							//
+						} else if (((L2PcInstance) getActiveObject()).isInBoat()) {
+							if (((L2PcInstance) getActiveObject()).getBoat() == object) {
+								//
+							} else {
+								removeKnownObject(object);
+							}
+						} else {
+							removeKnownObject(object);
+						}
+					} else {
+						removeKnownObject(object);
+					}
+				}
+			}
+		}
+
+		knownObjects = null;
 	}
-	
+
+
 	// =========================================================
 	// Property - Public
 	public L2Object getActiveObject()

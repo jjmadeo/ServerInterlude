@@ -22,6 +22,8 @@ package com.l2jfrozen.gameserver.model;
 
 import java.lang.reflect.Constructor;
 
+import Dev.event.mod.interfaces.Instance;
+import Dev.event.mod.interfaces.InstanceManager;
 import org.apache.log4j.Logger;
 
 import com.l2jfrozen.Config;
@@ -61,6 +63,8 @@ public abstract class L2Object
 	
 	// Objects can only see objects in same instancezone, instance 0 is normal world -1 the all seeing world
 	private int _instanceId = 0;
+
+	private int					_lastInstance = 0;
 	
 	// =========================================================
 	// Constructor
@@ -574,7 +578,7 @@ public abstract class L2Object
 	/**
 	 * @param instanceId The id of the instance zone the object is in - id 0 is global
 	 */
-	public void setInstanceId(final int instanceId)
+	/*public void setInstanceId(final int instanceId)
 	{
 		_instanceId = instanceId;
 		
@@ -587,6 +591,46 @@ public abstract class L2Object
 				// the knownlist here, but players usually enter instancezones through teleporting
 				// and the teleport will do the revalidation for us.
 			}
+			else
+			{
+				decayMe();
+				spawnMe();
+			}
+		}
+	}*/
+
+
+	public void setInstanceId(int instanceId)
+	{
+		if (_instanceId == instanceId)
+			return;
+
+		if (isPlayer())
+		{
+
+			if (_instanceId > 0)
+			{
+				Instance inst = InstanceManager.getInstance().getInstance(_instanceId);
+				if (inst != null)
+					inst.removePlayer(getObjectId());
+			}
+			if (instanceId > 0)
+			{
+				Instance inst = InstanceManager.getInstance().getInstance(instanceId);
+				if (inst != null)
+					inst.addPlayer(getObjectId());
+			}
+			if (((L2PcInstance)this).getPet() != null)
+				((L2PcInstance)this).getPet().setInstanceId(instanceId);
+		}
+
+		_instanceId = instanceId;
+		if (instanceId>0)
+			_lastInstance=instanceId;
+
+		if (isVisible())
+		{
+			if (isPlayer()){}
 			else
 			{
 				decayMe();

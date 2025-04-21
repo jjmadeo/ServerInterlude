@@ -285,6 +285,20 @@ public final class L2PcInstance extends L2PlayableInstance
 	
 	/** The _original karma vip. */
 	public int _originalNameColourVIP, _originalKarmaVIP;
+
+
+
+	public boolean _isInInstanceEvent = false;
+
+	public void setInInstanceEvent(boolean value)
+	{
+		_isInInstanceEvent = value;
+	}
+
+	public boolean isInInstanceEvent()
+	{
+		return _isInInstanceEvent;
+	}
 	
 	/** The _vote timestamp. */
 	private long _voteTimestamp = 0;
@@ -338,7 +352,8 @@ public final class L2PcInstance extends L2PlayableInstance
 	{
 		return _voteTimestamp;
 	}
-	
+
+
 	/**
 	 * Sets the vote timestamp.
 	 * @param timestamp the _voteTimestamp to set

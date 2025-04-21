@@ -94,8 +94,9 @@ public final class Broadcast
 	 * @param character
 	 * @param mov
 	 */
-	public static void toKnownPlayers(final L2Character character, final L2GameServerPacket mov)
+	/*public static void toKnownPlayers(final L2Character character, final L2GameServerPacket mov)
 	{
+		LOGGER.info("Broadcast:toKnownPlayers");
 		if (Config.DEBUG)
 		{
 			LOGGER.debug("players to notify:" + character.getKnownList().getKnownPlayers().size() + " packet:" + mov.getType());
@@ -108,9 +109,9 @@ public final class Broadcast
 			if (player == null)
 				continue;
 			
-			/*
+			*//*
 			 * TEMP FIX: If player is not visible don't send packets broadcast to all his KnowList. This will avoid GM detection with l2net and olympiad's crash. We can now find old problems with invisible mode.
-			 */
+			 *//*
 			if (character instanceof L2PcInstance && !player.isGM() && (((L2PcInstance) character).getAppearance().getInvisible() || ((L2PcInstance) character).inObserverMode()))
 				return;
 			
@@ -133,8 +134,46 @@ public final class Broadcast
 					e.printStackTrace();
 			}
 		}
+	}*/
+
+	public static void toKnownPlayers(final L2Character character, final L2GameServerPacket mov) {
+		LOGGER.info("Broadcast:toKnownPlayers");
+		if (Config.DEBUG) {
+			LOGGER.debug("players to notify:" + character.getKnownList().getKnownPlayers().size() + " packet:" + mov.getType());
+		}
+
+		final Collection<L2PcInstance> knownlist_players = character.getKnownList().getKnownPlayers().values();
+
+		for (final L2PcInstance player : knownlist_players) {
+			if (player == null || player.getInstanceId() != character.getInstanceId()) {
+				continue; // Si el jugador no es visible para el personaje, continuar con el siguiente jugador
+			}
+
+			/*
+			 * TEMP FIX: If player is not visible don't send packets broadcast to all his KnowList. This will avoid GM detection with l2net and olympiad's crash. We can now find old problems with invisible mode.
+			 */
+			if (character instanceof L2PcInstance && !player.isGM() && (((L2PcInstance) character).getAppearance().getInvisible() || ((L2PcInstance) character).inObserverMode())) {
+				continue; // Si el personaje no es visible para el jugador y no es GM, continuar con el siguiente jugador
+			}
+
+			try {
+				player.sendPacket(mov);
+				if (mov instanceof CharInfo && character instanceof L2PcInstance) {
+					final int relation = ((L2PcInstance) character).getRelation(player);
+
+					if (character.getKnownList().getKnownRelations().get(player.getObjectId()) != null && character.getKnownList().getKnownRelations().get(player.getObjectId()) != relation) {
+						player.sendPacket(new RelationChanged((L2PcInstance) character, relation, player.isAutoAttackable(character)));
+					}
+				}
+			} catch (final NullPointerException e) {
+				if (Config.ENABLE_ALL_EXCEPTIONS) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
-	
+
+
 	/**
 	 * Send a packet to all L2PcInstance in the _KnownPlayers (in the specified radius) of the L2Character.<BR>
 	 * <BR>
@@ -181,6 +220,7 @@ public final class Broadcast
 	 */
 	public static void toSelfAndKnownPlayers(final L2Character character, final L2GameServerPacket mov)
 	{
+		LOGGER.info("Broadcast:toSelfAndKnownPlayers");
 		if (character instanceof L2PcInstance)
 		{
 			character.sendPacket(mov);
@@ -192,6 +232,7 @@ public final class Broadcast
 	// To improve performance we are comparing values of radius^2 instead of calculating sqrt all the time
 	public static void toSelfAndKnownPlayersInRadius(final L2Character character, final L2GameServerPacket mov, long radiusSq)
 	{
+		LOGGER.info("Broadcast:toSelfAndKnownPlayersInRadius");
 		if (radiusSq < 0)
 		{
 			radiusSq = 360000;
@@ -223,6 +264,7 @@ public final class Broadcast
 	 */
 	public static void toAllOnlinePlayers(final L2GameServerPacket mov)
 	{
+		LOGGER.info("Broadcast:toAllOnlinePlayers");
 		if (Config.DEBUG)
 		{
 			LOGGER.debug("Players to notify: " + L2World.getAllPlayersCount() + " (with packet " + mov.getType() + ")");

@@ -405,7 +405,7 @@ public final class L2World
 	 * @param newRegion the new region
 	 * @param dropper L2Character who has dropped the object (if necessary)
 	 */
-	public void addVisibleObject(final L2Object object, final L2WorldRegion newRegion, final L2Character dropper)
+	/*public void addVisibleObject(final L2Object object, final L2WorldRegion newRegion, final L2Character dropper)
 	{
 		// If selected L2Object is a L2PcIntance, add it in L2ObjectHashSet(L2PcInstance) _allPlayers of L2World
 		//
@@ -424,12 +424,12 @@ public final class L2World
 				}
 				
 				tmp = null;
-				/*
+				*//*
 				 * if ((Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE) && tmp.isOffline()) { LOGGER.warn("Offline: Duplicate character!? Closing offline character (" + tmp.getName() + ")"); tmp.store(); // Store character and items tmp.logout(); if(tmp.getClient() != null) {
 				 * tmp.getClient().setActiveChar(null); // prevent deleteMe from being called a second time on disconnection } tmp = null; } else { LOGGER.warn("EnterWorld: Duplicate character!? Closing both characters (" + player.getName() + ")"); L2GameClient client = player.getClient();
 				 * player.store(); // Store character player.deleteMe(); client.setActiveChar(null); // prevent deleteMe from being called a second time on disconnection client = tmp.getClient(); tmp.store(); // Store character and items tmp.deleteMe(); if(client != null) {
 				 * client.setActiveChar(null); // prevent deleteMe from being called a second time on disconnection } tmp = null; return; }
-				 */
+				 *//*
 			}
 			
 			if (!newRegion.isActive())
@@ -506,8 +506,109 @@ public final class L2World
 		}
 		
 		visibles = null;
+	}*/
+
+
+	public void addVisibleObject(final L2Object object, final L2WorldRegion newRegion, final L2Character dropper) {
+		if (object == null || newRegion == null) {
+			return;
+		}
+
+		int instanceId = object.getInstanceId(); // Obtener el instanceID del objeto que se está agregando
+
+		// Verificar si el objeto pertenece a una instancia válida
+		if (instanceId < 0) {
+			return; // Si no pertenece a una instancia válida, salir del método
+		}
+
+		// If selected L2Object is a L2PcIntance, add it in L2ObjectHashSet(L2PcInstance) _allPlayers of L2World
+		if (object instanceof L2PcInstance) {
+			L2PcInstance player = (L2PcInstance) object;
+			L2PcInstance tmp = _allPlayers.get(player.getName().toLowerCase());
+			if (tmp != null && tmp != player) { // just kick the player previous instance
+				tmp.store(); // Store character and items
+				tmp.logout();
+
+				if (tmp.getClient() != null) {
+					tmp.getClient().setActiveChar(null); // prevent deleteMe from being called a second time on disconnection
+				}
+
+				tmp = null;
+			}
+
+			if (!newRegion.isActive()) {
+				return;
+			}
+			// Get all visible objects contained in the _visibleObjects of L2WorldRegions
+			// in a circular area of 2000 units
+			final List<L2Object> visibles = getVisibleObjects(object, 2000);
+			if (Config.DEBUG) {
+				LOGGER.debug("objects in range:" + visibles.size());
+			}
+
+			// tell the player about the surroundings
+			// Go through the visible objects contained in the circular area
+			for (final L2Object visible : visibles) {
+				if (visible == null || visible.getInstanceId() != instanceId) {
+					continue; // Si el objeto no pertenece a la misma instancia, saltar a la siguiente iteración
+				}
+
+				// Add the object in L2ObjectHashSet(L2Object) _knownObjects of the visible L2Character according to conditions :
+				// - L2Character is visible
+				// - object is not already known
+				// - object is in the watch distance
+				// If L2Object is a L2PcInstance, add L2Object in L2ObjectHashSet(L2PcInstance) _knownPlayer of the visible L2Character
+				visible.getKnownList().addKnownObject(object);
+
+				// Add the visible L2Object in L2ObjectHashSet(L2Object) _knownObjects of the object according to conditions
+				// If visible L2Object is a L2PcInstance, add visible L2Object in L2ObjectHashSet(L2PcInstance) _knownPlayer of the object
+				object.getKnownList().addKnownObject(visible);
+			}
+
+			if (!player.isTeleporting()) {
+				if (tmp != null) {
+					LOGGER.warn("Teleporting: Duplicate character!? Closing both characters (" + player.getName() + ")");
+					player.closeNetConnection();
+					tmp.closeNetConnection();
+					return;
+				}
+			}
+
+			synchronized (_allPlayers) {
+				_allPlayers.put(player.getName().toLowerCase(), player);
+			}
+
+			player = null;
+		}
+
+		// Get all visible objects contained in the _visibleObjects of L2WorldRegions
+		// in a circular area of 2000 units
+		FastList<L2Object> visibles = getVisibleObjects(object, 2000);
+		if (Config.DEBUG) {
+			LOGGER.debug("objects in range:" + visibles.size());
+		}
+
+		// tell the player about the surroundings
+		// Go through the visible objects contained in the circular area
+		for (final L2Object visible : visibles) {
+			// Add the object in L2ObjectHashSet(L2Object) _knownObjects of the visible L2Character according to conditions :
+			// - L2Character is visible
+			// - object is not already known
+			// - object is in the watch distance
+			// If L2Object is a L2PcInstance, add L2Object in L2ObjectHashSet(L2PcInstance) _knownPlayer of the visible L2Character
+			if (visible != null && visible.getInstanceId() == instanceId) {
+				visible.getKnownList().addKnownObject(object, dropper);
+
+				// Add the visible L2Object in L2ObjectHashSet(L2Object) _knownObjects of the object according to conditions
+				// If visible L2Object is a L2PcInstance, add visible L2Object in L2ObjectHashSet(L2PcInstance) _knownPlayer of the object
+				object.getKnownList().addKnownObject(visible, dropper);
+			}
+		}
+
+		visibles = null;
 	}
-	
+
+
 	/**
 	 * Add the L2PcInstance to _allPlayers of L2World.
 	 * @param cha the cha

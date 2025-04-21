@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import com.l2jfrozen.gameserver.network.serverpackets.L2GameServerPacket;
 import javolution.text.TextBuilder;
 import javolution.util.FastList;
 
@@ -313,6 +314,15 @@ public class Announcements
 			// empty message.. ignore
 			if (Config.ENABLE_ALL_EXCEPTIONS)
 				e.printStackTrace();
+		}
+	}
+
+	public void announceToInstance(L2GameServerPacket gsp, int instanceId)
+	{
+		for (L2PcInstance player : L2World.getInstance().getAllPlayers())
+		{
+			if (player.getInstanceId() == instanceId)
+				player.sendPacket(gsp);
 		}
 	}
 }

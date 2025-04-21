@@ -63,12 +63,16 @@ public class L2Spawn
 	
 	/** The identifier of the location area where L2NpcInstance can be spwaned */
 	private int _location;
+
+	private int				_randomeRespawnRange;
 	
 	/** The maximum number of L2NpcInstance that can manage this L2Spawn */
 	private int _maximumCount;
 	
 	/** The current number of L2NpcInstance managed by this L2Spawn */
 	private int _currentCount;
+
+	private boolean			_useRandomPosRespwn = false;
 	
 	/** The current number of SpawnTask in progress or stand by of this L2Spawn */
 	protected int _scheduledCount;
@@ -628,7 +632,16 @@ public class L2Spawn
 		}
 		return mob;
 	}
-	
+
+	public void enableRndRangeRespawn(boolean par)
+	{
+		_useRandomPosRespwn = par;
+	}
+	public boolean isRndRangeRespawn()
+	{
+		return _useRandomPosRespwn;
+	}
+
 	public static void addSpawnListener(final SpawnListener listener)
 	{
 		synchronized (_spawnListeners)
@@ -702,5 +715,14 @@ public class L2Spawn
 	{
 		_instanceId = instanceId;
 	}
-	
+
+
+	public void setRndRespawnRange(int par)
+	{
+		_randomeRespawnRange = par;
+	}
+	public int getRndRespawnRange()
+	{
+		return _randomeRespawnRange;
+	}
 }

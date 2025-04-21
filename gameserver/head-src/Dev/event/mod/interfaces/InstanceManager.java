@@ -12,15 +12,10 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.catssoftware.gameserver.instancemanager;
+package Dev.event.mod.interfaces;
 
 import javolution.util.FastMap;
-
-
 import org.apache.log4j.Logger;
-
-
-import ru.catssoftware.gameserver.model.entity.Instance;
 
 /** 
  * @author evill33t

@@ -1,38 +1,36 @@
-package ru.catssoftware.gameserver.model.entity;
+package Dev.event.mod.interfaces;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.ScheduledFuture;
-import javax.xml.parsers.DocumentBuilderFactory;
+import com.l2jfrozen.Config;
+import com.l2jfrozen.gameserver.datatables.csv.DoorTable;
+import com.l2jfrozen.gameserver.datatables.csv.MapRegionTable;
+import com.l2jfrozen.gameserver.datatables.sql.NpcTable;
+import com.l2jfrozen.gameserver.idfactory.IdFactory;
+import com.l2jfrozen.gameserver.model.L2Object;
+import com.l2jfrozen.gameserver.model.L2World;
+import com.l2jfrozen.gameserver.model.L2WorldRegion;
+import com.l2jfrozen.gameserver.model.Location;
+import com.l2jfrozen.gameserver.model.actor.instance.L2DoorInstance;
+import com.l2jfrozen.gameserver.model.actor.instance.L2NpcInstance;
+import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
+import com.l2jfrozen.gameserver.model.entity.Announcements;
+import com.l2jfrozen.gameserver.model.spawn.L2Spawn;
+import com.l2jfrozen.gameserver.network.SystemChatChannelId;
+import com.l2jfrozen.gameserver.network.SystemMessageId;
+import com.l2jfrozen.gameserver.network.serverpackets.CreatureSay;
+import com.l2jfrozen.gameserver.network.serverpackets.SystemMessage;
+import com.l2jfrozen.gameserver.templates.L2NpcTemplate;
+import com.l2jfrozen.gameserver.thread.ThreadPoolManager;
 import javolution.util.FastList;
 import javolution.util.FastSet;
 import org.apache.log4j.Logger;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import ru.catssoftware.Config;
-import ru.catssoftware.gameserver.Announcements;
-import ru.catssoftware.gameserver.ThreadPoolManager;
-import ru.catssoftware.gameserver.datatables.NpcTable;
-import ru.catssoftware.gameserver.datatables.xml.DoorTable;
-import ru.catssoftware.gameserver.idfactory.IdFactory;
-import ru.catssoftware.gameserver.instancemanager.InstanceManager;
-import ru.catssoftware.gameserver.instancemanager.MapRegionManager;
-import ru.catssoftware.gameserver.model.L2Object;
-import ru.catssoftware.gameserver.model.L2Spawn;
-import ru.catssoftware.gameserver.model.L2World;
-import ru.catssoftware.gameserver.model.L2WorldRegion;
-import ru.catssoftware.gameserver.model.Location;
-import ru.catssoftware.gameserver.model.actor.instance.L2DoorInstance;
-import ru.catssoftware.gameserver.model.actor.instance.L2NpcInstance;
-import ru.catssoftware.gameserver.model.actor.instance.L2PcInstance;
-import ru.catssoftware.gameserver.model.mapregion.TeleportWhereType;
-import ru.catssoftware.gameserver.network.SystemChatChannelId;
-import ru.catssoftware.gameserver.network.SystemMessageId;
-import ru.catssoftware.gameserver.network.serverpackets.CreatureSay;
-import ru.catssoftware.gameserver.network.serverpackets.SystemMessage;
-import ru.catssoftware.gameserver.templates.chars.L2NpcTemplate;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.ScheduledFuture;
 
 public class Instance
 {
@@ -107,6 +105,41 @@ public class Instance
 		if (!_questStarter.contains(par))
 			_questStarter.add(par);
 	}
+
+	public void onRegister(L2PcInstance player)
+	{
+		if (!_players.contains(player.getObjectId()))
+			_players.add(player.getObjectId());
+
+		if (player.getPet() != null)
+			player.getPet().setInstanceId(getId());
+
+		player.setInstanceId(getId());
+
+		player.setInInstanceEvent(true);
+
+		if(player.isInParty())
+			player.leaveParty();
+
+
+		player.teleToLocation(getSpawnLoc()[0], getSpawnLoc()[1], getSpawnLoc()[2]);
+
+	}
+
+
+	public void onExit(L2PcInstance player)
+	{
+		if (_players.contains(player.getObjectId()))
+			_players.remove(player.getObjectId());
+
+
+		ejectPlayer(player.getObjectId());
+	}
+
+
+
+
+
 	
 	/**
 	 * Set the instance duration task
@@ -150,7 +183,8 @@ public class Instance
 		if (player != null && player.getInstanceId() !=0)
 		{
 			player.setInstanceId(0);
-			player.teleToLocation(TeleportWhereType.Town);
+			player.setInInstanceEvent(false);
+			player.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 		}
 	}
 
@@ -190,7 +224,8 @@ public class Instance
 
 		try
 		{
-			newdoor.setMapRegion(MapRegionManager.getInstance().getRegion(temp.getX(), temp.getY(), temp.getZ()));
+			/*newdoor.setMapRegion(MapRegionManager.getInstance().getRegion(temp.getX(), temp.getY(), temp.getZ()));*/
+			newdoor.setMapRegion(MapRegionTable.getInstance().getMapRegion(temp.getX(), temp.getY()));
 		}
 		catch (Exception e)
 		{
@@ -375,9 +410,9 @@ public class Instance
 					boolean doorState = false;
 					if ("door".equalsIgnoreCase(d.getNodeName()))
 					{
-						doorId = Integer.parseInt(d.getAttributes().getNamedItem("doorId").getNodeValue());
-						if (d.getAttributes().getNamedItem("open") != null)
-							doorState = Boolean.parseBoolean(d.getAttributes().getNamedItem("open").getNodeValue());
+						doorId = Integer.parseInt(d.getAttributes().getNamedItem("id").getNodeValue());
+						if (d.getAttributes().getNamedItem("opened") != null)
+							doorState = Boolean.parseBoolean(d.getAttributes().getNamedItem("opened").getNodeValue());
 						addDoor(doorId, doorState);
 					}
 				}
@@ -478,14 +513,14 @@ public class Instance
 		{
 			timeLeft = remaining / 1000;
 			interval = 30000;
-			cs = new CreatureSay(0, SystemChatChannelId.Chat_Alliance, "Notice", timeLeft + " seconds left.");
+			cs = new CreatureSay(0, SystemChatChannelId.CHAT_ALLIANCE.ordinal(), "Notice", timeLeft + " seconds left.");
 			remaining = remaining - 30000;
 		}
 		else
 		{
 			timeLeft = remaining / 1000;
 			interval = 10000;
-			cs = new CreatureSay(0, SystemChatChannelId.Chat_Alliance, "Notice", timeLeft + " seconds left.");
+			cs = new CreatureSay(0, SystemChatChannelId.CHAT_ALLIANCE.ordinal(), "Notice", timeLeft + " seconds left.");
 			remaining = remaining - 10000;
 		}
 
@@ -532,7 +567,9 @@ public class Instance
 			removeNpcs();
 			L2Spawn spawnDat;
 			L2NpcTemplate npcTemplate = NpcTable.getInstance().getTemplate(32485);
-			spawnDat = new L2Spawn(npcTemplate);
+			try {
+				spawnDat = new L2Spawn(npcTemplate);
+
 			spawnDat.setLocx(-89174);
 			spawnDat.setLocy(-213566);
 			spawnDat.setLocz(-8103);
@@ -542,7 +579,13 @@ public class Instance
 			spawnDat.stopRespawn();
 			spawnDat.setInstanceId(getId());
 			L2Object newmob = spawnDat.doSpawn();
-			_npcs.add((L2NpcInstance)newmob);			
+			_npcs.add((L2NpcInstance)newmob);
+
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
@@ -562,7 +605,7 @@ public class Instance
 	public Location getTpLoc(L2PcInstance player)
 	{
 		if (_tpx == 0 || _tpy == 0 || _tpz == 0)
-			return MapRegionManager.getInstance().getTeleToLocation(player, TeleportWhereType.Town);
+			return MapRegionTable.getInstance().getTeleToLocation(player, MapRegionTable.TeleportWhereType.Town);
 		else
 			return new Location(_tpx,_tpy, _tpz);
 	}

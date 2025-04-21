@@ -67,7 +67,8 @@ public class AdminSpawn implements IAdminCommandHandler
 		"admin_show_npcs",
 		"admin_teleport_reload",
 		"admin_spawnnight",
-		"admin_spawnday"
+		"admin_spawnday",
+			"admin_ispawn"
 	};
 	
 	public static Logger LOGGER = Logger.getLogger(AdminSpawn.class);
@@ -168,9 +169,9 @@ public class AdminSpawn implements IAdminCommandHandler
 					respawnTime = Integer.parseInt(st.nextToken());
 				
 				if (cmd.equalsIgnoreCase("admin_spawn_once"))
-					spawnMonster(activeChar, id, respawnTime, mobCount, false);
+					spawnMonster(activeChar, id, respawnTime, mobCount,0 ,false);
 				else
-					spawnMonster(activeChar, id, respawnTime, mobCount, true);
+					spawnMonster(activeChar, id, respawnTime, mobCount,0, true);
 				
 				cmd = null;
 				id = null;
@@ -183,6 +184,33 @@ public class AdminSpawn implements IAdminCommandHandler
 				AdminHelpPage.showHelpPage(activeChar, "spawns.htm");
 			}
 			
+			st = null;
+		}
+		else if (command.startsWith("admin_ispawn"))
+		{
+			StringTokenizer st = new StringTokenizer(command, " ");
+			try
+			{
+				String cmd = st.nextToken();
+				String id = st.nextToken();
+				String instanceID = st.nextToken();
+				LOGGER.info("Instance ID: "+instanceID);
+				int mobCount = 1;
+				int respawnTime = 10;
+				spawnMonster(activeChar, id, respawnTime, mobCount, Integer.valueOf(instanceID), true);
+
+				cmd = null;
+				id = null;
+				instanceID = null;
+			}
+			catch (final Exception e)
+			{ // Case of wrong or missing monster data
+				if (Config.ENABLE_ALL_EXCEPTIONS)
+					e.printStackTrace();
+
+				AdminHelpPage.showHelpPage(activeChar, "spawns.htm");
+			}
+
 			st = null;
 		}
 		// Command for unspawn all Npcs on Server, use //repsawnall to respawn the npc
@@ -232,8 +260,9 @@ public class AdminSpawn implements IAdminCommandHandler
 	{
 		return ADMIN_COMMANDS;
 	}
-	
-	private void spawnMonster(final L2PcInstance activeChar, String monsterId, final int respawnTime, final int mobCount, boolean permanent)
+
+
+	private void spawnMonster(final L2PcInstance activeChar, String monsterId, final int respawnTime, final int mobCount,int instanceid, boolean permanent)
 	{
 		L2Object target = activeChar.getTarget();
 		if (target == null)
@@ -263,6 +292,7 @@ public class AdminSpawn implements IAdminCommandHandler
 		
 		try
 		{
+
 			L2Spawn spawn = new L2Spawn(template1);
 			if (Config.SAVE_GMSPAWN_ON_CUSTOM)
 				spawn.setCustom(true);
@@ -272,6 +302,11 @@ public class AdminSpawn implements IAdminCommandHandler
 			spawn.setAmount(mobCount);
 			spawn.setHeading(activeChar.getHeading());
 			spawn.setRespawnDelay(respawnTime);
+
+			if(instanceid!=0){
+				spawn.setInstanceId(instanceid);
+			}
+
 			
 			if (RaidBossSpawnManager.getInstance().isDefined(spawn.getNpcid()) || GrandBossManager.getInstance().isDefined(spawn.getNpcid()))
 			{

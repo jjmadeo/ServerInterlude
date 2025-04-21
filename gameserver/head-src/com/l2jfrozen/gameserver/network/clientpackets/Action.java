@@ -84,6 +84,8 @@ public final class Action extends L2GameClientPacket
 		// Players can't interact with objects in the other instances except from multiverse
 		if (obj.getInstanceId() != activeChar.getInstanceId() && activeChar.getInstanceId() != -1)
 		{
+			activeChar.sendMessage("No podes interactuar con objetos de otra instancia. tu instancia es: " + activeChar.getInstanceId() + " y la del objeto es: " + obj.getInstanceId());
+
 			getClient().sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
